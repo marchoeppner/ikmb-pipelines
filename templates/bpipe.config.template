@@ -1,7 +1,7 @@
 executor="slurm"
 procs=1
 queue="normal"
-
+memory=8
 
 // Specify resources for individual tools
 
@@ -32,5 +32,27 @@ commands {
 		procs=16
 	}
 
+	bwa {
+		procs=16
+		memory=16
+	}
 
+	blast {
+		procs=8
+		memory=16
+	}		
+
+
+	gatk_local_realign_target {
+		procs=4
+		memory=25
+	}	
+
+	gatk_local_realign {
+		memory=22
+	}
+
+	gatk_base_recalibrate {
+		memory=22
+	}
 }

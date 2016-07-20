@@ -9,7 +9,8 @@ inputs "fastq.gz" : "Requires gzipped fastq file (fastq.gz)"
 // assumes pattern like: <exome>_exome_<sample>_<subsample>_<mate>.fastq.gz
 Bpipe.run { "%_%_%_*.fastq.gz" * [ 
 
-	  pipeline_prepare + "%_%_%_%_*.fastq.gz" * [ 
+	  verify_dependencies.using(binary:"samtools") 
+	+ pipeline_prepare + "%_%_%_%_*.fastq.gz" * [ 
 		bwa_mem 
 		+ samtools_bam_sort 
 		+ samtools_index ]  
