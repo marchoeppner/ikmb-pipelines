@@ -1,202 +1,15 @@
-// Assembly version
-ASSEMBLY="hg19"
+// A short description of the pipeline here
 
-REF="/ifs/data/nfs_share/sukmb205/references/human/" + ASSEMBLY + "/" + ASSEMBLY + ".fasta"
-BWA_INDEX=REF
+about title: "The IKMB exome pipeline"
 
-PROJECT="TESTPROJECT"
-SUBPROJECT="TESTSUBPROJECT"
-
-GATK="/ifs/data/nfs_share/ikmb_repository/software/gatk/3.4.0/GenomeAnalysisTK.jar"
-PICARD="/ifs/data/nfs_share/ikmb_repository/software/picard/1.134/picard.jar"
-
-DBSNP_REF="/ifs/data/nfs_share/sukmb205//references/projects/GATK_resources_" + ASSEMBLY + "/dbsnp_138." + ASSEMBLY + ".vcf"
-SNP_REF="/ifs/data/nfs_share/sukmb205//references/projects/GATK_resources_" + ASSEMBLY + "/Mills_and_1000G_gold_standard.indels." + ASSEMBLY + ".vcf"
-
-stage = {
-
-	branch.global_sample = branch.name
-
-	forward inputs
-}
-
-bwa_mem = {
-
-	var procs : 8
-
-	requires BWA_INDEX : "Must provide location of BWA index as BWA_INDEX"	
-	requires PROJECT : "Must provide value for PROJECT"
-	requires SUBPROJECT : "Must provide value for SUBPROJECT"
-
-	def sam = branch.name + ".sam"
-
-	def header = '@RG' + "\\tID:Illumina\\tSM:${PROJECT}_${SUBPROJECT}_${branch.name}_${BWA_INDEX}\\tLB:lib_2x100\\tDS:${BWA_INDEX}\\tCN:ICMB,Kiel;Germany"
-
-	produce(sam) {
-		exec """
-			bwa mem -t $procs -M -R \"$header\" $BWA_INDEX $input1 $input2 > $output
-		""","bwa_mem"
-	}
-
-}
-
-@preserve
-samtools_bam_sort = {
-
-	def fasta_index = REF + ".fai"
-	transform(".sam") to(".sorted.bam") {
-		exec "samtools view -uhSt $fasta_index $input | samtools sort -f -m 16G - $output","samtools_bam_sort" 
-	}
-}
-
-samtools_index = {
-
-	transform(".bam") to(".bam.bai") {
-		exec "samtools index $input"
-	}
-
-	forward input
-
-}
-
-@preserve
-samtools_merge = {
-
-	def bam_file = branch.global_sample + ".bam"
-	
-	produce(bam_file) {
-		exec "samtools merge $bam_file $inputs"
-	}
-
-}
-
-gatk_local_realign_target = {
-
-	transform("indel_realignment.list") {
-
-		branch.realignment_target = output
-
-		exec """
-			java -XX:ParallelGCThreads=1 -jar -Xmx25g $GATK
-				-T RealignerTargetCreator 
-				-nt 4 
-				-known $SNP_REF
-				-I $input 
-				-o $output
-				-R $REF
-		""","gatk_local_realign_target"
-	}
-
-	forward input
-}
-
-gatk_local_realign = {
-
-	transform("realigned.bam") {
-
-                exec """
-                        java -XX:ParallelGCThreads=1 -jar -Xmx22g $GATK
-                                -T IndelRealigner
-                                -known $SNP_REF
-                                -I $input
-                                -o $output
-                                -R $REF
-				-targetIntervals ${branch.realignment_target}
-                ""","gatk_local_realign"
-        }
-}
-
-gatk_base_recalibrate = {
-
-	transform("recal_data.grp") {
-
-		branch.bqsr = output
-
-		exec """
-                        java -XX:ParallelGCThreads=1 -jar -Xmx22g $GATK
-                                -T BaseRecalibrator
-                                -knownSites $SNP_REF
-				-knownSites $DBSNP_REF
-                                -I $input
-                                -o $output
-                                -R $REF
-				-l INFO
-				-dP ILLUMINA
-                ""","gatk_base_recalibrate"
-	}
-
-	forward input
-}
-
-gatk_print_reads = {
-
-
-	filter("recal") {
-
-		exec """
-                        java -XX:ParallelGCThreads=1 -jar -Xmx4g $GATK
-                                -T PrintReads
-                                -I $input
-                        	-BQSR ${branch.bqsr}	
-			        -o $output
-                                -R $REF
-                                -l INFO
-                ""","gatk_print_reads"
-	}
-
-}
-
-
-picard_dedup = {
-
-	filter("nodup") {
-
-		def metrics = "$output" + ".nodup.txt"
-
-		exec """
-			java -Xmx16g -jar $PICARD MarkDuplicates 
-			I=$input 
-			O=$output 
-			METRICS_FILE=$metrics 
-			REMOVE_DUPLICATES=true 
-			ASSUME_SORTED=true 
-			VALIDATION_STRINGENCY=SILENT 
-			OPTICAL_DUPLICATE_PIXEL_DISTANCE=10 
-		""","picard_dedup"
-	}
-
-}
-
-samtools_remove_duplicates = {
-
-	filter("final") {
-	
-		exec "samtools view -b -q 1 $input > $output & samtools index $output"
-
-	}
-
-}
-
-samtools_flagstat = {
-
-	transform("bamstats") {
-
-		exec "samtools flagstat $input > $output" 
-
-	}
-}
-
-picard_hs_metrics = {
-
-
-}
+inputs "fastq.gz" : "Requires gzipped fastq file (fastq.gz)"
 
 
 // Splitting into samples first, then the subsamples
 // assumes pattern like: <exome>_exome_<sample>_<subsample>_<mate>.fastq.gz
 Bpipe.run { "%_%_%_*.fastq.gz" * [ 
 
-	  stage + "%_%_%_%_*.fastq.gz" * [ 
+	  pipeline_prepare + "%_%_%_%_*.fastq.gz" * [ 
 		bwa_mem 
 		+ samtools_bam_sort 
 		+ samtools_index ]  
@@ -211,7 +24,7 @@ Bpipe.run { "%_%_%_*.fastq.gz" * [
 		gatk_base_recalibrate 
 		+ gatk_print_reads 
 		+ picard_dedup 
-		+ samtools_remove_duplicates 
+		+ samtools_view.using(quality:1) 
 		+ samtools_flagstat 
 	]
 ] }

@@ -6,7 +6,6 @@ inputs "fastq.gz" : "Input must be a gzipped fastq file (fastq.gz)"
 
 // load 'pipeline.config'
 
-
-run { "%-%_%_R001.fastq.gz" * [ print_file_name ].using(paired:true)  }
+run { "%-%_%_*_R*_001.fastq.gz" * [ print_file_name ]  }
 
 

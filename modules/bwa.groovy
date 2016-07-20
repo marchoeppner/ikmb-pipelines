@@ -12,13 +12,13 @@ bwa_mem = {
 	var phred_64 : false
 
     	// requires here
-	requires PLATFORM : "Please specify the sequencing platform"
-	requires CENTER : "Please specify the sequencing centre"
 	requires BWA_INDEX : "Must provide location of BWA_INDEX"
 
     	// Running a command
 
 	def samfile = branch.name + "-bwa_mem.sam"
+
+	def header = '@RG' + "\\tID:Illumina\\tSM:${branch.name}_${BWA_INDEX}\\tLB:lib_2x100\\tDS:${BWA_INDEX}\\tCN:ICMB,Kiel;Germany"
 
 	def command
 
@@ -30,7 +30,7 @@ bwa_mem = {
 
 
 	produce(samfile) {
-		exec "bwa mem -t $procs $BWA_INDEX $command > $output", "bwa_mem"
+		exec "bwa mem -t $procs -M  -R \"$header\" $BWA_INDEX $command > $output", "bwa_mem"
 	}
 
 	// validation of output

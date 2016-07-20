@@ -1,11 +1,12 @@
 CHUNKS	Define the number of files to split a FASTA file into	10
 INTERPROSCAN	Location of the Interpro wrapper script
-GATK	Location of the GATK package
-REF	Location of reference file
-GOLD_STANDARD_INDELS	Location of gold standard indels for variant calling
+GATK	Location of the GATK package	/ifs/data/nfs_share/ikmb_repository/software/gatk/3.4.0/GenomeAnalysisTK.jar
+REF	Location of reference file	/ifs/data/nfs_share/sukmb205/references/human/hg19/hg19.fasta	
+GOLD_STANDARD_INDELS	Location of gold standard indels for variant calling	
 INDELS_100G	Location of indels from 100 G project
 LOG	Location for log file
-DBSNP	Location of SNP database DBSNP
+DBSNP	Location of SNP database DBSNP	/ifs/data/nfs_share/sukmb205//references/projects/GATK_resources_hg19/dbsnp_138.hg19.vcf"
+SNP_REF	Reference SNPs for GATK	/ifs/data/nfs_share/sukmb205//references/projects/GATK_resources_hg19/Mills_and_1000G_gold_standard.indels.hg19.vcf"
 TOPHAT	Location of tophat executable	tophat
 CUFFLINKS	Location of cufflinks executable	cufflinks
 SAMTOOLS	Location of samtools executable	samtools
