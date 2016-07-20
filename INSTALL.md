@@ -45,7 +45,7 @@ If this looks ok and no errors are thrown, you can run the pipeline:
 
 bpipe run -n <allowed number of cores> /path/to/pipeline_file input_files
 
-The <allowed_number_of_cores> controls how many compute cores the pipeline is allowed to use at most. 
+The allowed_number_of_cores controls how many compute cores the pipeline is allowed to use at most across your cluster. 
 
 5) Additional reading:
 
