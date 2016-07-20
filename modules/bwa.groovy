@@ -1,0 +1,45 @@
+bwa_mem = {
+
+	doc about: "BWA mem alignment algorithm",
+	description: "Aligns short reads using the BWA mem algorithm",
+    	author: "m.hoeppner@ikmb.uni-kiel.de"
+
+	// Variables here
+
+	var procs : 16
+	var BWAOPT_MEM : ""
+	var paired : true
+	var phred_64 : false
+
+    	// requires here
+	requires PLATFORM : "Please specify the sequencing platform"
+	requires CENTER : "Please specify the sequencing centre"
+	requires BWA_INDEX : "Must provide location of BWA_INDEX"
+
+    	// Running a command
+
+	def samfile = branch.name + "-bwa_mem.sam"
+
+	def command
+
+	if (paired) {
+		command += input1 + " " + input2
+	} else {
+		command = input
+	}
+
+
+	produce(samfile) {
+		exec "bwa mem -t $procs $BWA_INDEX $command > $output", "bwa_mem"
+	}
+
+	// validation of output
+	
+	check {
+		exec "[ -s $output ]"
+	} otherwise {
+		fail "BWA alignment empty, terminating $branch.name"
+	}
+}
+
+

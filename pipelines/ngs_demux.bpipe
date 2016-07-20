@@ -1,0 +1,9 @@
+// A short description of the pipeline here
+
+about title: "A short pipeline to demultiplex a sequencing run. Expects the data directory as input"
+
+// load 'pipeline.config'
+
+run { bcl2fastq }
+
+
