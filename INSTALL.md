@@ -9,7 +9,7 @@ Ruby 2.0 or higher (for the pipeline configuration script)
 
 Plus any tool you wish to pipeline. 
 
-2) Installating this pipeline
+2) Installing this pipeline
 
 Check out the code to a location that is visible across your cluster nodes
 
