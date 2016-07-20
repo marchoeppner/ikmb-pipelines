@@ -39,11 +39,11 @@ NOTE: Not alpipelines actually need a pipeline.config file, so if the file is em
 
 Assuming you filled out the config file(s), you can next test if the pipeline recognizes your input and see what commands it will run first:
 
-bpipe test /path/to/pipeline_file <input files>
+bpipe test /path/to/pipeline_file input files
 
 If this looks ok and no errors are thrown, you can run the pipeline:
 
-bpipe run -n <allowed number of cores> /path/to/pipeline_file <input_files>
+bpipe run -n <allowed number of cores> /path/to/pipeline_file input_files
 
 The <allowed_number_of_cores> controls how many compute cores the pipeline is allowed to use at most. 
 
