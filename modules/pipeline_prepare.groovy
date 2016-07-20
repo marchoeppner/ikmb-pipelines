@@ -4,16 +4,6 @@ pipeline_prepare = {
 	
 	desc:"""
 		This pipeline module can be used to set global variables required across all subsequent modules
-
-		Options:
-
-		sample_dir : false / true 
-
-		If set to true, all subsequent pipeline stages will be written into a subfolder based on the
-		name of the input file for a particular branch. The default is 'false'.
-
-		For this to work, the module needs to check for branch.sample_dir. 
-		
 	""",
 
 	author: "mphoeppner@gmail.com"

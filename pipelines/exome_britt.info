@@ -1,0 +1,8 @@
+Britt's Exome Pipeline
+----------------------
+
+The default IKMB exome pipeline, based on Britt's initial design. 
+
+This pipelines takes one or multiple sets of paired-end genomic reads that are processed, merged and analysed using GATK. 
+
+
