@@ -1,0 +1,4 @@
+ISAAC is Illuminas high-speed variant calling pipeline. This implementation of the workflow uses BWA, Samtools and Picard to generated
+aligned, sorted and deduped BAM files. 
+
+Expects IVC_INSTALL_DIR to point to the location where ISAAC is installed. 

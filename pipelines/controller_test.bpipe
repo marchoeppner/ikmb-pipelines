@@ -1,4 +1,4 @@
-// A dummy pipeline to tsest the job controller
+// A dummy pipeline to test the job controller
 
 about title: "This pipeline simply prints the name of a set of files into an output."
 

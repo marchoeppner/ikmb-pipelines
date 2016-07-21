@@ -1,12 +1,11 @@
 // A short description of the pipeline here
 
-about title: "The IKMB exome pipeline"
+about title: "The IKMB exome pipeline after BSP"
 
 inputs "fastq.gz" : "Requires gzipped fastq file (fastq.gz)"
 
+// Pattern should group files by sample, then by library/lane and merge samples down to one file at the end
 
-// Splitting into samples first, then the subsamples
-// assumes pattern like: <exome>_exome_<sample>_<subsample>_<mate>.fastq.gz
 Bpipe.run { "%_%_%_*.fastq.gz" * [ 
 
 	  verify_dependencies.using(binary:"samtools") 
