@@ -13,7 +13,8 @@ gatk_local_realign_target = {
     	// requires here
 
 	requires GATK : "Must provide path to GATK"
-
+  	requires SNP_REF : "Must provide reference SNPS for GATK"
+  	
 	// Set a different output directory
     	if (directory.length() > 0) {
 		output.dir = directory
