@@ -18,6 +18,8 @@ print_file_name = {
 	
     	// Running a command
 	
+	names = inputs.join(";")
+
     	exec "echo $inputs > $output"
 
 	// Validation here?
@@ -27,5 +29,6 @@ print_file_name = {
         } otherwise {
                 fail "Output empty, terminating $branch.name"
         }
-	
+
+	forward inputs	
 }

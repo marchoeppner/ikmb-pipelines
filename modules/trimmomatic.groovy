@@ -6,6 +6,7 @@ trimmomatic = {
     var procs : 8
     var sliding_window : true
     var directory : "trimmomatic"
+    var minlen : "75"
 
     doc title: "Adapter trimming of read files using Trimmomatic",
         desc: """
@@ -58,7 +59,7 @@ trimmomatic = {
 
     if (paired) {
         produce(products) {
-		exec "java -jar $TM_JAR PE -threads $procs $input1 $input2 ${output1} ${output3} ${output2} ${output4} ILLUMINACLIP:$TM_PATH/adapters/$ADAPTER:2:30:10 LEADING:3 TRAILING:3 $options MINLEN:75","trimmomatic"
+		exec "java -jar $TM_JAR PE -threads $procs $input1 $input2 ${output1} ${output3} ${output2} ${output4} ILLUMINACLIP:$TM_PATH/adapters/$ADAPTER:2:30:10 LEADING:3 TRAILING:3 $options MINLEN:$minlen","trimmomatic"
         }
     } else {
         produce(products) {

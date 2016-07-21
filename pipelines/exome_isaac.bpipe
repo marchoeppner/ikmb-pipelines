@@ -6,9 +6,9 @@ inputs "fastq.gz" : "Expects gzipped fastq files (fastq.gz)"
 
 load 'pipeline.config'
 
-Bpipe.run { verify_dependency.using(binary:"isaac")
-        + verify_dependency.using(binary:"bwa")
-        + verify_dependency.using(binary:"samtools")
+Bpipe.run { verify_binary.using(binary:"isaac")
+        + verify_binary.using(binary:"bwa")
+        + verify_binary.using(binary:"samtools")
         + "%_%_%_*.fastq.gz" * [
                  pipeline_prepare
                 + bwa_mem.using(procs:16)

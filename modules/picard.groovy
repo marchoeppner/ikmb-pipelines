@@ -46,3 +46,50 @@ picard_dedup = {
         }
 	
 }
+
+picard_coverage = {
+
+	doc about: "Calculate coverage in BAM file using target interval",
+        description: "Uses Picard to calculate coverage in target intervals using a BAM file",
+        constraints: "Requires Picard to be installed",
+        author: "mphoeppner@gmail.com"
+
+        // Variables here
+        var procs : 1          // Number of cores to use
+        var directory : ""      // Allows specifying an output directory
+        var memory : 16
+
+        // requires here
+
+        requires PICARD : "Must provide path to Picard"
+	requires TARGET_INTERVALS : "Must provide file with target intervals"
+
+        // Set a different output directory
+        if (directory.length() > 0) {
+                output.dir = directory
+        }
+
+	produce(input.prefix + ".target_stats", input.prefix + ".target_cov") {
+		exec """
+			java -Xmx${memory}g -jar $PICARD CalculateHsMetrics 
+			BI=$TARGET_INTERVALS
+			TI=$TARGET_INTERVALS
+			I=$input
+			O=$output1
+			R=$REF
+			PER_TARGET_COVERAGE=$output2
+			VALIDATION_STRINGENCNCY=LINIENT
+	
+		""","picard_coverage"
+	}
+
+	// Validation here?
+
+        check {
+                exec "[ -s $output1 ]"
+        } otherwise {
+                fail "Output empty, terminating $branch.name"
+        }
+		
+
+}
