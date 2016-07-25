@@ -15,6 +15,7 @@ gatk_haplotype_caller = {
         requires REF  : "Must provide reference file for GATK"
         requires SNP_REF : "Must provide reference SNPS for GATK"
         requires DBSNP_REF : "Must provide dbSNP reference"
+	requires TARGET_FILE : "Must provide the Exome target file"
 
 	def vcf_file = branch.name + ".gatk.raw.vcf"
 

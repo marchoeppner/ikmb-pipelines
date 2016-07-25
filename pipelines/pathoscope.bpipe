@@ -1,0 +1,11 @@
+// A short description of the pipeline here
+
+about title: "Pathoscope2 pipeline, starting from raw reads"
+
+inputs "fastq.gz" : "Expecting compressed fastq files (fastq.gz)"
+
+load 'pathoscope.config'
+
+//F01435-L1_S208_L007_R2_001.fastq.gz
+
+Bpipe.run { "%-%_%_R*_00*.fastq.gz" * [  trimmomatic.using(procs:4) + pathoscope_map.using(procs:8,directory:"patho_out") + pathoscope_id.using(directory:"patho_updated") ] }

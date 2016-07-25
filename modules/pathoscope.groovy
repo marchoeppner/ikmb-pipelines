@@ -11,7 +11,7 @@ pathoscope_map = {
 
     	// requires here
 	
-	requires INDEX_DIR : "Must provide path to Pathoscope Bowtie2 indices"
+	requires PATHOSCOPE_INDEX_DIR : "Must provide path to Pathoscope Bowtie2 indices"
 
 	// Set a different output directory
     	if (directory.length() > 0) {
@@ -25,7 +25,7 @@ pathoscope_map = {
 	// Evil hack below... pathoscope does not properly deal with paths so we construct a bpipe compatible output to pass on
 	// but to pathscope we provide the broken down info (or else it will combine outdir and output to generate messed up paths)
         produce(samfile) {
-                exec "pathoscope2.py MAP -1 $input1 -2 $input2 -indexDir $INDEX_DIR -filterIndexPrefixes hg19_rRNA -targetIndexPrefix A-Lbacteria.fa,M-Zbacteria.fa,virus.fa -outDir $directory -outAlign $samfile -expTag $branch.name -numThreads $procs","pathoscope_map"
+                exec "pathoscope2.py MAP -1 $input1 -2 $input2 -indexDir $PATHOSCOPE_INDEX_DIR -filterIndexPrefixes hg19_rRNA -targetIndexPrefix A-Lbacteria.fa,M-Zbacteria.fa,virus.fa -outDir $directory -outAlign $samfile -expTag $branch.name -numThreads $procs","pathoscope_map"
         }
 	// Validation here?
 

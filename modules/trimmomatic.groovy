@@ -31,7 +31,7 @@ trimmomatic = {
 
     output.dir = directory
 
-    input_extension = ".fq.gz"
+    input_extension = ".fastq.gz"
 
     def options
 
@@ -46,10 +46,10 @@ trimmomatic = {
 
     if (paired) {
         products = [
-            ("$input1".replaceAll(/.*\//,"") - input_extension + '_paired.fq.gz'),
-	    ("$input2".replaceAll(/.*\//,"") - input_extension + '_paired.fq.gz'),
-            ("$input1".replaceAll(/.*\//,"") - input_extension + '_unpaired.fq.gz'),
-            ("$input2".replaceAll(/.*\//,"") - input_extension + '_unpaired.fq.gz')
+            ("$input1".replaceAll(/.*\//,"") - input_extension + '_paired.fastq.gz'),
+	    ("$input2".replaceAll(/.*\//,"") - input_extension + '_paired.fastq.gz'),
+            ("$input1".replaceAll(/.*\//,"") - input_extension + '_unpaired.fastq.gz'),
+            ("$input2".replaceAll(/.*\//,"") - input_extension + '_unpaired.fastq.gz')
         ]
     } else {
         products = [
