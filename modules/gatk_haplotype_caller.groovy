@@ -17,24 +17,29 @@ gatk_haplotype_caller = {
         requires DBSNP_REF : "Must provide dbSNP reference"
 	requires TARGET_FILE : "Must provide the Exome target file"
 
-	def vcf_file = branch.name + ".gatk.raw.vcf"
+	def vcf_file = ""
+	if (branch.sample) {
+		vcf_file = branch.sample + ".gatk.raw.vcf"
+	} else {
+		vcf_file = branch.name + ".gatk.raw.vcf"
+	}
 
 	produce(vcf_file) {
 		exec """
 			java -XX:ParallelGCThreads=1 -jar -Xmx${memory}g $GATK
-                	-T BaseRecalibrator
+                	-T HaplotypeCaller
 			-nct $procs
 			-minPruning 4 -minReadsPerAlignStart 10
 			-R $REF
-			-I $input
+			-I $input.bam
 			--dbsnp $DBSNP_REF
 			-stand_call_conf 50.0
 			-stand_emit_conf 10.0
 			-mbq 10
-			-TARGET_FILE $TARGET_FILE
+			-L $TARGET_FILE
 			-L chrM
 			-o $output
-		"""
+		""","gatk_haplotype_caller"
 	}
 
 	 // Validation here?

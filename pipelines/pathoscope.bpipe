@@ -8,4 +8,4 @@ load 'pathoscope.config'
 
 //F01435-L1_S208_L007_R2_001.fastq.gz
 
-Bpipe.run { "%-%_%_R*_00*.fastq.gz" * [  trimmomatic.using(procs:4) + pathoscope_map.using(procs:8,directory:"patho_out") + pathoscope_id.using(directory:"patho_updated") ] }
+Bpipe.run { "%-%_%_R*_00*.fastq.gz" * [  trimmomatic.using(procs:16) + pathoscope_map.using(procs:8,directory:"patho_out") + pathoscope_id.using(directory:"patho_updated") ] }

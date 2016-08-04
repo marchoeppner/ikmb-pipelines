@@ -1,0 +1,20 @@
+// A short description of the pipeline here
+
+about title: "Runs blastp and interproscan to generate Annie files"
+
+inputs "gff" : "A Protein file in FASTA format"
+
+load 'pipeline.config'
+
+Bpipe.run { "%.gff" * [
+	verify_binary.using(binary:"gffread") 
+	+ verify_binary.using(binary:"fastasplit") 
+	+ verify_binary.using(binary:"interproscan.sh") 
+	+ verify_binary.using(binary:"blastp")
+	+ pipeline_prepare + gff2protein + fastasplit +
+        [ 
+		[ "%" * [ blast.using(program:"blastp")] + merge_blast_tab ],
+                [ "%" * [ interproscan ] + [  "*.tsv" * [ merge_interpro_tsv] , "*.xml" * [ merge_interpro_xml ] ] ]
+
+        ]
+]}

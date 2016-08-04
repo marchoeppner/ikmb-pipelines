@@ -177,6 +177,7 @@ module Bpipe
 	  
       # Parses the module and stores identified values in designated variables. 
       def _parse_string(lines)
+	lines = lines.select{|l| l.include?("//") == false } # skip comment lines of any kind
         self.requirements = lines.select{|line| line.include?("requires") and line.include?(":") }.collect{|line| line.split(":")[0].gsub(/^.*requires/, '').strip }
         self.name = lines[0].split("=")[0].strip
       end

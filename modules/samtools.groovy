@@ -96,7 +96,7 @@ samtools_view = {
 
         filter("view") {
 
-                exec "samtools view -b $options $input > $output & samtools index $output"
+                exec "samtools view -b $options -o $output $input"
 
         }
 
@@ -120,4 +120,6 @@ samtools_flagstat = {
                 exec "samtools flagstat $input > $output"
 
         }
+
+	forward input
 }

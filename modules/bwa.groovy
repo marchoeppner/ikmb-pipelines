@@ -20,7 +20,7 @@ bwa_mem = {
 
 	def header = '@RG' + "\\tID:Illumina\\tSM:${branch.name}_${BWA_INDEX}\\tLB:lib_2x100\\tDS:${BWA_INDEX}\\tCN:ICMB,Kiel;Germany"
 
-	def command
+	def command = ""
 
 	if (paired) {
 		command += input1 + " " + input2

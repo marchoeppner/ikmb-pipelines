@@ -19,7 +19,7 @@ trimmomatic = {
         """,
         contraints: """
             Files must be paired-end
-            Files can be compressed (.fq.gz) or uncompressed (.fq)
+            Files can be compressed (.fastq.gz) or uncompressed (.fastq)
         """,
         author: "mphoeppner@gmail.com"
 

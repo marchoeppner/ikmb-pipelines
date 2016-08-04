@@ -78,11 +78,12 @@ picard_coverage = {
 			O=$output1
 			R=$REF
 			PER_TARGET_COVERAGE=$output2
-			VALIDATION_STRINGENCNCY=LINIENT
+			VALIDATION_STRINGENCY=LENIENT
 	
 		""","picard_coverage"
 	}
 
+	
 	// Validation here?
 
         check {
@@ -91,5 +92,5 @@ picard_coverage = {
                 fail "Output empty, terminating $branch.name"
         }
 		
-
+	forward input
 }
