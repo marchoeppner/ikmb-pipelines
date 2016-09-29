@@ -1,0 +1,18 @@
+// A short description of the pipeline here
+
+about title: "A pipeline for the DZHK Omics WGS project"
+
+inputs "fastq.gz" : "Expecting compressed fastq files (fastq.gz)"
+
+load 'dzhk_whole_genome.config'
+
+run { "%_R*_%.fastq.gz" * [ 
+trimmomatic + [
+	fastqc.using(paired:"true"),
+	gatk_pipeline
+] + "*.vcf" + [ 
+	vep , ancestry 
+	]
+] }
+
+

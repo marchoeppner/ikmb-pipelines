@@ -1,0 +1,9 @@
+DZHK Omics WGS pipeline
+-----------------------
+
+This pipeline implements a workflow to:
+- pre-process reads (adapter and quality trimming)
+- execute a standard alignment and post-processing pipeline using BWA and Isaac
+- perform effect prediction using the EnsEMBL VEP with plugins
+- Assign ancestry to a sample based on characteristic SNPs
+- generate a JSON report for database import

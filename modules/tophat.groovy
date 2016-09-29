@@ -60,7 +60,7 @@ tophat = {
 
     produce("accepted_hits.bam") {
     		if (paired) {
-                	exec "tophat $phred $options -o $output.dir -p $procs --library-type=$library_method $BWT2_INDEX $input1 $input2 >$output.dir/tophat.out 2>$output.dir/tophat.err && md5sum $output >$output.dir/tophat.md5","tophat"
+                	exec "tophat $phred $options -o $output.dir -p $procs --library-type=$library_method $BWT2_INDEX $input1 $input2 >$output.dir/tophat.out","tophat"
             	} else {
                 	exec "tophat $phred $options -o $output.dir -p $procs --library-type=$library_method $BWT2_INDEX $input >$output.dir/tophat.out 2>$output.dir/tophat.err && md5sum $output >$output.dir/tophat.md5","tophat"
             	}

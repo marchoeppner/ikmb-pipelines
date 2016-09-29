@@ -35,6 +35,40 @@ samtools_bam_sort = {
 	
 }
 
+samtools_sort = {
+
+        doc about: "A stage to convert sam files into a sorted bam file",
+        description: "Converts .bam to sorted.bam",
+        constraints: "Must have samtools in PATH",
+        author: "mphoeppner@gmail.com"
+
+        // Variables here
+        var procs : 1           // Number of cores to use
+        var directory : ""      // Allows specifying an output directory
+
+        // requires here
+
+        // Set a different output directory
+        if (directory.length() > 0) {
+                output.dir = directory
+        }
+
+        // Running a command
+
+	filter("sorted") {
+                exec "samtools sort -T $branch.name -O bam -m 16G $input > $output","samtools_sort"
+        }
+
+        // Validation here?
+
+        check {
+                exec "[ -s $output ]"
+        } otherwise {
+                fail "Output empty, terminating $branch.name"
+        }
+
+}
+
 samtools_index = {
 
 	doc about: "Indexing a BAMfile",

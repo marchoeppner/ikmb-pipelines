@@ -13,7 +13,7 @@ fastqc = {
 	var paired : true
 	var directory : "fastqc"
 
-	input_extension = ".gz"	
+	input_extension = ".fastq.gz"	
 
 	output.dir = directory
 

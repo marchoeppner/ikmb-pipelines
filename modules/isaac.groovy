@@ -19,7 +19,7 @@ isaac_configure = {
     	// Running a command
 	
 	produce("Makefile") {
-	    	exec "configureWorkflow.pl --bam=$input --ref=$REF --config=$ISAAC_CONFIG --output-dir=$output"
+	    	exec "configureWorkflow.pl --bam=$input --ref=$REF --config=$ISAAC_CONFIG --output-dir=$output.dir"
 	}
 
 	// Validation here?
@@ -39,5 +39,7 @@ isaac = {
         constraints: "Requires the issac_configure module to run first",
         author: "mphoeppner@gmail.com"
 
-	exec "make -j 8 -f $input"
+	var procs : 8
+
+	exec "make -j $procs -f $input"
 }

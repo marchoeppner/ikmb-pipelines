@@ -36,7 +36,7 @@ gatk_variant_recalibrator = {
 		fail "Do not understand the mode $mode, aborting"
 	}
 
-    	transform(".raw.${extension}.vcf") to(".recal.${extension}.file",".${extension}.tranches",".${extension}.plot") {
+    	transform(".vcf") to(".recal.file",".tranches",".plot") {
 		exec """
                         java -XX:ParallelGCThreads=1 -jar -Xmx${memory}g $GATK
                         -T VariantRecalibrator
