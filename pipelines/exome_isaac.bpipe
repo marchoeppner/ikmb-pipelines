@@ -4,17 +4,18 @@ about title: "Exome variant calling pipeline using ISAAC"
 
 inputs "fastq.gz" : "Expects gzipped fastq files (fastq.gz)"
 
-load 'pipeline.config'
+load 'exome_isaac.config'
 
 Bpipe.run { verify_binary.using(binary:"isaac")
         + verify_binary.using(binary:"bwa")
         + verify_binary.using(binary:"samtools")
+	+ verify_binary.using(binary:"samblaster")
         + "%_%_%_*.fastq.gz" * [
                  pipeline_prepare
-                + bwa_mem.using(procs:16)
-                + samtools_bam_sort
+                + trimmomatic.using(procs:16,minlen:36)
+                + bwa_mem_samblaster.using(procs:16)
+                + samtools_sort
                 + samtools_index
-
         ]
         + "*.bam" * [
                 samtools_merge

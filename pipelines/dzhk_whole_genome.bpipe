@@ -6,12 +6,12 @@ inputs "fastq.gz" : "Expecting compressed fastq files (fastq.gz)"
 
 load 'dzhk_whole_genome.config'
 
-run { "%_R*_%.fastq.gz" * [ 
-trimmomatic + [
-	fastqc.using(paired:"true"),
-	gatk_pipeline
-] + "*.vcf" + [ 
-	vep , ancestry 
+// NA12878wgs_20FUKAAXX_NA_L006_R1.fastq.gz
+
+run { "%_%_%_%_R*.fastq.gz" * [ 
+	pipeline_prepare + trimmomatic + [
+		fastqc.using(paired:"true"),
+		bwa_pipeline		
 	]
 ] }
 
