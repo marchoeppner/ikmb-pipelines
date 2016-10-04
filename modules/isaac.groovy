@@ -1,4 +1,4 @@
-isaac_configure = {
+isaac_variant_configure = {
 
 	doc about: "Isaac configuration step",
 	description: "Create a configuration for the Isaac Variant caller",
@@ -13,13 +13,13 @@ isaac_configure = {
 	requires REF : "Must provide reference file for ISAAC"
 
 	// Set a different output directory
-	def outdir = "isaac_" + branch.sample
+
 	output.dir = "isaac_" + branch.sample
 	
     	// Running a command
 	
 	produce("Makefile") {
-	    	exec "rm -R ${output.dir} && configureWorkflow.pl --bam=$input --ref=$REF --config=$ISAAC_CONFIG --output-dir=$output.dir"
+	    	exec "rm -r ${output.dir} && configureWorkflow.pl --bam=$input --ref=$REF --config=$ISAAC_CONFIG --output-dir=$output.dir"
 	}
 
 	// Validation here?
@@ -32,7 +32,7 @@ isaac_configure = {
 	
 }
 
-isaac = {
+isaac_variant = {
 
         doc about: "Isaac Variant Caller",
         description: "Run the Isaac Variant caller",
