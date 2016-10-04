@@ -22,7 +22,7 @@ bwa_mem_samblaster = {
 
 	def samfile = branch.sample + "-bwa_mem.samblaster.bam"
 
-	def header = '@RG' + "\\tID:Illumina\\tSM:${branch.name}_${BWA_INDEX}\\tLB:lib_2x${read_length}\\tDS:${BWA_INDEX}\\tCN:ICMB,Kiel;Germany"
+	def header = '@RG' + "\\tID:Illumina\\tSM:${branch.sample}_${BWA_INDEX}\\tLB:lib_2x${read_length}\\tDS:${BWA_INDEX}\\tCN:ICMB,Kiel;Germany"
 
 	def command = ""
 
@@ -33,7 +33,7 @@ bwa_mem_samblaster = {
 	}
 
 	produce(samfile) {
-		exec "$BWA mem -t $procs -M  -R \"$header\" $BWA_INDEX $command | $SAMBLASTER -M | $SAMTOOLS view -Sb - > $output", "bwa_mem"
+		exec "$BWA mem -t $procs -M -R \"$header\" $BWA_INDEX $command | $SAMBLASTER -M | $SAMTOOLS view -Sb - > $output", "bwa_mem"
 	}
 
 	// validation of output
