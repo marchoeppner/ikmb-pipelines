@@ -13,6 +13,7 @@ bwa_mem = {
 
     	// requires here
 	requires BWA_INDEX : "Must provide location of BWA_INDEX"
+	requires BWA : "Must provide location of BWA"
 
     	// Running a command
 
@@ -30,7 +31,7 @@ bwa_mem = {
 
 
 	produce(samfile) {
-		exec "bwa mem -t $procs -M  -R \"$header\" $BWA_INDEX $command > $output", "bwa_mem"
+		exec "BWA mem -t $procs -M  -R \"$header\" $BWA_INDEX $command > $output", "bwa_mem"
 	}
 
 	// validation of output

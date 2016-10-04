@@ -11,7 +11,7 @@ load 'dzhk_whole_genome.config'
 run { "%_%_%_%_R*.fastq.gz" * [ 
 	pipeline_prepare + trimmomatic + [
 		fastqc.using(paired:"true"),
-		bwa_pipeline		
+		bwa_pipeline + isaac_configure + isaac + vep
 	]
 ] }
 

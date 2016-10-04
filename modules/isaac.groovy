@@ -13,13 +13,13 @@ isaac_configure = {
 	requires REF : "Must provide reference file for ISAAC"
 
 	// Set a different output directory
-	def outdir = "isaac_" + branch.name
-	output.dir = "isaac_" + branch.name
+	def outdir = "isaac_" + branch.sample
+	output.dir = "isaac_" + branch.sample
 	
     	// Running a command
 	
 	produce("Makefile") {
-	    	exec "configureWorkflow.pl --bam=$input --ref=$REF --config=$ISAAC_CONFIG --output-dir=$output.dir"
+	    	exec "rm -R ${output.dir} && configureWorkflow.pl --bam=$input --ref=$REF --config=$ISAAC_CONFIG --output-dir=$output.dir"
 	}
 
 	// Validation here?
@@ -41,5 +41,13 @@ isaac = {
 
 	var procs : 8
 
-	exec "make -j $procs -f $input"
+	output.dir = "isaac_" + branch.sample + "/results"
+
+	// input from previous stage is Makefile, but we need to derive 
+	// the output name from the original bam file, so we do this:
+	def makefile = input
+
+	transform("bam") to("genome.vcf.gz") {
+		exec "make -j $procs -f $makefile","isaac"
+	}
 }

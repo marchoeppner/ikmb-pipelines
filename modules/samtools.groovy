@@ -9,8 +9,10 @@ samtools_bam_sort = {
 	// Variables here
 	var procs : 1		// Number of cores to use
 	var directory : ""	// Allows specifying an output directory
-
+	var mem : 16
     	// requires here
+
+	requires SAMTOOLS : "Must provide location of Samtools"
 
 	// Set a different output directory
     	if (directory.length() > 0) {
@@ -22,7 +24,7 @@ samtools_bam_sort = {
         def fasta_index = REF + ".fai"
 
 	transform(".sam") to(".sorted.bam") {
-	    	exec "samtools view -uhSt $fasta_index $input | samtools sort -f -m 16G - $output","samtools_bam_sort"
+	    	exec "$SAMTOOLS view -uhSt $fasta_index $input | samtools sort -f -m ${mem}G - $output","samtools_bam_sort"
 	}
 
 	// Validation here?
@@ -45,18 +47,27 @@ samtools_sort = {
         // Variables here
         var procs : 1           // Number of cores to use
         var directory : ""      // Allows specifying an output directory
+	var mem : "15"
 
         // requires here
+	requires SAMTOOLS : "Must provide location of samtools"
 
         // Set a different output directory
         if (directory.length() > 0) {
                 output.dir = directory
         }
 
+	def sorted_file = ""
+	if (branch.sample.length() > 0) {
+		sorted_file = branch.sample
+	} else {
+		sorted_file = branch.name
+	}
+
         // Running a command
 
 	filter("sorted") {
-                exec "samtools sort -T $branch.name -O bam -m 16G $input > $output","samtools_sort"
+                exec "$SAMTOOLS sort -T $sorted_file -O bam -m ${mem}G $input > $output","samtools_sort"
         }
 
         // Validation here?
@@ -80,8 +91,10 @@ samtools_index = {
         var procs : 1           // Number of cores to use
         var directory : ""      // Allows specifying an output directory
 
+	requires SAMTOOLS : "Must provide location of Samtools"
+
         transform(".bam") to(".bam.bai") {
-                exec "samtools index $input"
+                exec "$SAMTOOLS index $input"
         }
 
         forward input
@@ -100,11 +113,12 @@ samtools_merge = {
         var procs : 1           // Number of cores to use
         var directory : ""      // Allows specifying an output directory
 
+        requires SAMTOOLS : "Must provide location of Samtools"
 
         def bam_file = branch.sample + ".bam"
 
         produce(bam_file) {
-                exec "samtools merge $bam_file $inputs"
+                exec "$SAMTOOLS merge $bam_file $inputs"
         }
 
 }
@@ -122,6 +136,8 @@ samtools_view = {
         var directory : ""      // Allows specifying an output directory
 	var quality : ""
 
+        requires SAMTOOLS : "Must provide location of Samtools"
+
 	def options = ""
 
 	if (quality.length() > 0 ) {
@@ -130,7 +146,7 @@ samtools_view = {
 
         filter("view") {
 
-                exec "samtools view -b $options -o $output $input"
+                exec "$SAMTOOLS view -b $options -o $output $input"
 
         }
 
@@ -148,10 +164,11 @@ samtools_flagstat = {
         var procs : 1           // Number of cores to use
         var directory : ""      // Allows specifying an output directory
 
+        requires SAMTOOLS : "Must provide location of Samtools"
 
         transform("bamstats") {
 
-                exec "samtools flagstat $input > $output"
+                exec "$SAMTOOLS flagstat $input > $output"
 
         }
 

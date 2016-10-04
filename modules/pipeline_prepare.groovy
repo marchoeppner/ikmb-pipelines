@@ -11,6 +11,7 @@ pipeline_prepare = {
 	// Permanently store the sample name (to preserve it across forks)
 	branch.sample = branch.name
 	// Set the sample name as output directory
+
 	branch.outdir = branch.sample
 
 	forward inputs

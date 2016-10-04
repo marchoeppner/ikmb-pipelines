@@ -22,7 +22,7 @@ fastasplit = {
 		""",
 		author: "mphoeppner@gmail.com"
 
-	var directory : ""
+	var directory : "."
 	
         requires CHUNKS : "Must set variable CHUNKS"
 
@@ -40,12 +40,8 @@ fastasplit = {
 		}
 	}
 
-      	//  def chunkfiles = (0..(CHUNKS.toInteger()-1)).collect{ input+"_chunk_000000${it}" }
 
-	 // Set a different output directory
-        if (directory.length() > 0) {
-                output.dir = directory
-        }
+      	//  def chunkfiles = (0..(CHUNKS.toInteger()-1)).collect{ input+"_chunk_000000${it}" }
 
 	produce(chunkfiles) {
                 exec "fastasplit -f $input -o ${output.dir} -c $CHUNKS","fastasplit"
