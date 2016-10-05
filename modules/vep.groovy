@@ -8,6 +8,7 @@ vep = {
 	// Variables here
 	var procs : 16		// Number of cores to use
 	var directory : ""	// Allows specifying an output directory
+	var name : ""		// Allow to manipulate output name if the default won't work. 
 
     	// requires here
 	requires ENSEMBLCACHE : "Must provide root directory for EnsEMBL VEP cache"
@@ -19,9 +20,17 @@ vep = {
 	}
 
     	// Running a command
+
+	def vep_result 
+
+	if (name) {
+		vep_result = branch.sample + "." + name + ".vep"
+	} else {
+		vep_result = input.prefix + ".vep"
+	}
 	
-	transform("vep") {
-	    	exec "$VEP -i $input --no_progress --assembly $ASSEMBLY --fork $procs --output_file $output --stats_text --cache --dir_cache $ENSEMBLCACHE --offline --maf_1kg --maf_exac","vep"
+	produce(vep_result) {
+	    	exec "$VEP --format vcf -i $input --no_progress --assembly $ASSEMBLY --fork $procs --output_file $output --stats_text --cache --dir_cache $ENSEMBLCACHE --offline --maf_1kg --maf_exac","vep"
 	}
 
 	// Validation here?

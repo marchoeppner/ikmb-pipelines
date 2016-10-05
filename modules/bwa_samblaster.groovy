@@ -1,3 +1,4 @@
+@preserve
 bwa_mem_samblaster = {
 
 	doc about: "BWA mem alignment algorithm",

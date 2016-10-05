@@ -1,4 +1,4 @@
-manta_config = {
+manta_configure = {
 
 	doc about: "Generating the config file for MANTA",
 	description: "Sets uf a MANTA run for a single BAM file",
@@ -38,7 +38,7 @@ manta = {
 
 	output.dir = "manta_" + branch.sample + "/results/variants"
 
-	produce("candidateSmallIndels.vcf.gz","candidateSV.vcf.gz","diploidSV.vcf.gz") {
+	produce("candidateSV.vcf.gz","candidateSmallIndels.vcf.gz","diploidSV.vcf.gz") {
 		exec "$input -m local -j $procs","manta"
 	} 
 

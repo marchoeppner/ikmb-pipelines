@@ -13,7 +13,7 @@ run {  "%_%_%_%_R*.fastq.gz" * [
 		fastqc.using(paired:"true"),
 		bwa_pipeline + [ 
 			isaac_variant_configure + isaac_variant + extract_variants + vep,
-			manta_config + manta 
+			manta_configure + manta + vep.using(name:"SV")
 		]
 	]
 ] }

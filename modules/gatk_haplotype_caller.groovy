@@ -66,15 +66,13 @@ gatk_haplotype_caller_wgs = {
         // Requires
         requires GATK : "Must provide path to GATK"
         requires REF  : "Must provide reference file for GATK"
-        requires SNP_REF : "Must provide reference SNPS for GATK"
         requires DBSNP_REF : "Must provide dbSNP reference"
-        requires TARGET_FILE : "Must provide the Exome target file"
 
         def vcf_file = ""
         if (branch.sample) {
-                vcf_file = branch.sample + ".gatk.raw.vcf"
+                vcf_file = branch.sample + ".gatk.hc.gvcf"
         } else {
-                vcf_file = branch.name + ".gatk.raw.vcf"
+                vcf_file = branch.name + ".gatk.hc.gvcf"
         }
 
         produce(vcf_file) {
@@ -83,6 +81,7 @@ gatk_haplotype_caller_wgs = {
                         -T HaplotypeCaller
                         -nct $procs
                         -R $REF
+			--emitRefConfidence GVCF
                         -I $input.bam
                         --dbsnp $DBSNP_REF
                         -o $output
@@ -90,5 +89,4 @@ gatk_haplotype_caller_wgs = {
         }
 
          // Validation here?
-
 }
