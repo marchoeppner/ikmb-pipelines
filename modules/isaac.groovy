@@ -19,7 +19,7 @@ isaac_variant_configure = {
     	// Running a command
 	
 	produce("Makefile") {
-	    	exec "rm -r ${output.dir} && configureWorkflow.pl --bam=$input --ref=$REF --config=$ISAAC_CONFIG --output-dir=$output.dir"
+	    	exec "rm -r ${output.dir} && configureWorkflow.pl --bam=${file(input).absolutePath} --ref=$REF --config=$ISAAC_CONFIG --output-dir=$output.dir"
 	}
 
 	// Validation here?

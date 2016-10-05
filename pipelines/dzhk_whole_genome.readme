@@ -7,3 +7,6 @@ This pipeline implements a workflow to:
 - perform effect prediction using the EnsEMBL VEP with plugins
 - Assign ancestry to a sample based on characteristic SNPs
 - generate a JSON report for database import
+
+The modules required by the pipeline can be loaded by the copmanion script
+dzhk_whole_genome.load_modules
