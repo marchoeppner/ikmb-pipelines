@@ -31,7 +31,7 @@ manta = {
 
 	doc about: "Detection of structural variants using MANTA",
         description: "MANTA is a tool to detect structural genomic variants from aligned reads in BAM format",
-        constraints: "Information on constraints here",
+        constraints: "Must run the configuration step first and pass the output",
         author: "m.hoeppner@ikmb.uni-kiel.de"
 
 	var procs : 16

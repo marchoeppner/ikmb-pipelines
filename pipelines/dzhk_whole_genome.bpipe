@@ -12,8 +12,9 @@ run {  "%_%_%_%_R*.fastq.gz" * [
 	pipeline_prepare + trimmomatic + [
 		fastqc.using(paired:"true"),
 		bwa_pipeline + [ 
-			isaac_variant_configure + isaac_variant + extract_variants + vep,
-			manta_configure + manta + vep.using(name:"SV")
+			isaac_variant_configure + isaac_variant + extract_variants + vep.using(everything:true),
+			manta_configure + manta + vep.using(name:"SV",everything:true),
+			gatk_wgs_pipeline
 		]
 	]
 ] }
