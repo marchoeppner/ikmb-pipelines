@@ -11,7 +11,8 @@ bwa_mem_samblaster = {
 	var BWAOPT_MEM : ""
 	var paired : true
 	var phred_64 : false
-	var read_lentgth : 100
+	var read_length : 100
+	var cram : true
 
     	// requires here
 	requires BWA_INDEX : "Must provide location of BWA_INDEX"
@@ -21,7 +22,16 @@ bwa_mem_samblaster = {
 
     	// Running a command
 
-	def samfile = branch.sample + "-bwa_mem.samblaster.bam"
+	def samfile
+	def sam_options = ""
+	if (cram) {
+		samfile = branch.name + "-bwa_mem.samblaster.cram"
+		sam_options += "-C -T $BWA_INDEX"
+	} else {
+		samfile = branch.name + "-bwa_mem.samblaster.bam"
+		sam_options += "-b"
+	}
+
 
 	def header = '@RG' + "\\tID:Illumina\\tSM:${branch.sample}_${BWA_INDEX}\\tLB:lib_2x${read_length}\\tDS:${BWA_INDEX}\\tCN:ICMB,Kiel;Germany"
 
@@ -34,7 +44,7 @@ bwa_mem_samblaster = {
 	}
 
 	produce(samfile) {
-		exec "$BWA mem -t $procs -M -R \"$header\" $BWA_INDEX $command | $SAMBLASTER -M | $SAMTOOLS view -Sb - > $output", "bwa_mem"
+		exec "$BWA mem -t $procs -M -R \"$header\" $BWA_INDEX $command | $SAMBLASTER -M | $SAMTOOLS view -S $sam_options - > $output", "bwa_mem"
 	}
 
 	// validation of output

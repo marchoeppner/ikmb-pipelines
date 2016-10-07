@@ -10,3 +10,5 @@ module load Samtools/1.3
 module load Samblaster
 module load Manta
 module load EnsEMBL
+module load Freebayes
+module load GATK/3.6.0

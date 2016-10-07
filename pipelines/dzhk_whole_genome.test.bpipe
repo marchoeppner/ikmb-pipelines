@@ -1,0 +1,24 @@
+// A short description of the pipeline here
+
+about title: "A pipeline for the DZHK Omics WGS project - works with CRAM files."
+
+inputs "fastq.gz" : "Expecting compressed fastq files (fastq.gz)"
+
+load 'dzhk_whole_genome.config'
+
+// NA12878wgs_20FUKAAXX_NA_L006_R1.fastq.gz
+// AH81VLADXX_U0b_TGACCA_L002_R1.fastq.gz
+
+run {  "%_*.fastq.gz" * [ 
+	pipeline_prepare + "%_%_%_%_R*.fastq.gz" * [ 
+		trimmomatic + bwa_pipeline 
+	] 
+	+ "*.cram" * [ samtools_merge + samtools_index ]
+        + [ 
+		isaac_variant_configure + isaac_variant + extract_variants + vep.using(everything:true,format:"json"),
+		manta_configure + manta + vep.using(name:"SV",everything:true,format:"json"),
+		freebayes_parallel.using(procs:16)
+	]
+] }
+
+

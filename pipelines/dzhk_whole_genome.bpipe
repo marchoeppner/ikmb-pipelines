@@ -9,14 +9,14 @@ load 'dzhk_whole_genome.config'
 // NA12878wgs_20FUKAAXX_NA_L006_R1.fastq.gz
 
 run {  "%_%_%_%_R*.fastq.gz" * [ 
-	pipeline_prepare + trimmomatic + [
-		fastqc.using(paired:"true"),
+	pipeline_prepare + trimmomatic + 
+		//fastqc.using(paired:"true"),
 		bwa_pipeline + [ 
-			isaac_variant_configure + isaac_variant + extract_variants + vep.using(everything:true),
-			manta_configure + manta + vep.using(name:"SV",everything:true),
+			isaac_variant_configure + isaac_variant + extract_variants + vep.using(everything:true,format:"json"),
+			manta_configure + manta + vep.using(name:"SV",everything:true,format:"json"),
 			gatk_wgs_pipeline
 		]
-	]
+	
 ] }
 
 

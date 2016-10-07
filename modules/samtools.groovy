@@ -45,29 +45,35 @@ samtools_sort = {
         author: "mphoeppner@gmail.com"
 
         // Variables here
-        var procs : 1           // Number of cores to use
+        var procs : 8           // Number of cores to use
         var directory : ""      // Allows specifying an output directory
-	var mem : "15"
+	var mem : "31"
+	var carm : true		// Specify if to use CRAM or BAM; default CRAM
 
         // requires here
 	requires SAMTOOLS : "Must provide location of samtools"
+	requires REF : "Must provide location of alignment reference"
 
         // Set a different output directory
         if (directory.length() > 0) {
                 output.dir = directory
         }
 
-	def sorted_file = ""
-	if (branch.sample.length() > 0) {
-		sorted_file = branch.sample
+	def sorted_file = branch.name
+
+	def options = ""
+
+	if (cram) {
+		options += "-O cram --reference $REF"
 	} else {
-		sorted_file = branch.name
-	}
+		options += "-O bam"
+	}	
+	
 
         // Running a command
 
 	filter("sorted") {
-                exec "$SAMTOOLS sort -T $sorted_file -O bam -m ${mem}G $input > $output","samtools_sort"
+                exec "$SAMTOOLS sort -@ $procs -T $sorted_file $options -m ${mem}G $input > $output","samtools_sort"
         }
 
         // Validation here?
@@ -82,8 +88,8 @@ samtools_sort = {
 
 samtools_index = {
 
-	doc about: "Indexing a BAMfile",
-        description: "Creates an index for a BAM file using samtools",
+	doc about: "Indexing a BAM/CRAM file",
+        description: "Creates an index for a BAM/CRAM file using samtools",
         constraints: "Must have samtools in PATH",
         author: "mphoeppner@gmail.com"
 
@@ -93,7 +99,17 @@ samtools_index = {
 
 	requires SAMTOOLS : "Must provide location of Samtools"
 
-        transform(".bam") to(".bam.bai") {
+	def index_file
+	def dot = file(input).name.lastIndexOf(".")
+	def extension = file(input).name.substring(dot + 1)
+	
+	if (extension == "cram") {
+		index_file = input + ".crai"
+	} else {
+		index_file = input + ".bai"
+	}
+	
+        produce(index_file) {
                 exec "$SAMTOOLS index $input"
         }
 
@@ -110,15 +126,26 @@ samtools_merge = {
         author: "mphoeppner@gmail.com"
 
         // Variables here
-        var procs : 1           // Number of cores to use
+        var procs : 8           // Number of cores to use
         var directory : ""      // Allows specifying an output directory
+	var cram : true		// Use CRAM format
 
         requires SAMTOOLS : "Must provide location of Samtools"
+	requires REF : "Must provide location of alignment reference"
 
-        def bam_file = branch.sample + ".bam"
+	def options = ""
+	def bam_file 
+
+        if (cram) {
+                options += "-O cram --reference $REF"
+		bam_file = branch.sample + ".cram"
+        } else {
+                options += "-O bam"
+		bam_file = branch.sample + ".bam"
+        }
 
         produce(bam_file) {
-                exec "$SAMTOOLS merge $bam_file $inputs"
+                exec "$SAMTOOLS merge -@ $procs $options $bam_file $inputs"
         }
 
 }
@@ -126,8 +153,8 @@ samtools_merge = {
 samtools_view = {
 
 
-        doc about: "A stage to merge bam files",
-        description: "Merges multiple BAM files",
+        doc about: "A stage to convert SAM formats",
+        description: "Converts SAM to BAM/CRAM",
         constraints: "Must have samtools in PATH",
         author: "mphoeppner@gmail.com"
 
@@ -135,10 +162,18 @@ samtools_view = {
         var procs : 1           // Number of cores to use
         var directory : ""      // Allows specifying an output directory
 	var quality : ""
+	var cram : true 	// Use CRAM format as output
 
         requires SAMTOOLS : "Must provide location of Samtools"
 
+
 	def options = ""
+
+	if (cram) {
+		options += "-C --reference $REF"
+	} else {
+		options += "-b"
+	}
 
 	if (quality.length() > 0 ) {
 		options += " -q ${quality}"
@@ -146,7 +181,7 @@ samtools_view = {
 
         filter("view") {
 
-                exec "$SAMTOOLS view -b $options -o $output $input"
+                exec "$SAMTOOLS view $options -o $output $input"
 
         }
 

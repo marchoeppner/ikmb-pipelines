@@ -47,7 +47,7 @@ isaac_variant = {
 	// the output name from the original bam file, so we do this:
 	def makefile = input
 
-	transform("bam") to("genome.vcf.gz") {
+	transform("genome.vcf.gz") {
 		exec "make -j $procs -f $makefile","isaac"
 	}
 }

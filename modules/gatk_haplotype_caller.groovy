@@ -83,6 +83,7 @@ gatk_haplotype_caller_wgs = {
                         -R $REF
 			--emitRefConfidence GVCF
                         -I $input.bam
+			-variant_index_type LINEAR -variant_index_parameter 128000
                         --dbsnp $DBSNP_REF
                         -o $output
                 ""","gatk_haplotype_caller"

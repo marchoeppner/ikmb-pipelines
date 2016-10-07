@@ -11,6 +11,7 @@ vep = {
 	var canonical : true 	// Set flag for canonical annotation
 	var name : ""		// Allow to manipulate output name if the default won't work. 
 	var everything : false  // Switch to run every meta analysis
+	var format : "vcf"	// Enable the use of different output formats as defined by VEP
 
     	// requires here
 	requires ENSEMBLCACHE : "Must provide root directory for EnsEMBL VEP cache"
@@ -36,13 +37,13 @@ vep = {
 	def vep_result 
 
 	if (name) {
-		vep_result = branch.sample + "." + name + ".vep"
+		vep_result = branch.sample + "." + name + ".vep_" + format
 	} else {
-		vep_result = input.prefix + ".vep"
+		vep_result = input.prefix + ".vep_" + format
 	}
 	
 	produce(vep_result) {
-	    	exec "$VEP $options --format vcf -i $input --no_progress --assembly $ASSEMBLY --fork $procs --output_file $output --stats_text --cache --dir_cache $ENSEMBLCACHE --offline --maf_1kg --maf_exac","vep"
+	    	exec "$VEP $options --format vcf --${format} -i $input --no_progress --assembly $ASSEMBLY --fork $procs --output_file $output --stats_text --cache --dir_cache $ENSEMBLCACHE --offline --maf_1kg --maf_exac","vep"
 	}
 
 	// Validation here?

@@ -21,8 +21,8 @@ fastqc = {
 
 	if (paired) {
 		products = [
-			("$input1".replaceAll(/.*\//,"") - input_extension + '_fastqc.html'),
-			("$input2".replaceAll(/.*\//,"") - input_extension + '_fastqc.html')
+			(output.dir + "/" + "${file(input1).name}".replaceAll(/.*\//,"") - input_extension + '_fastqc.html'),
+			(output.dir + "/" + "${file(input2).name}".replaceAll(/.*\//,"") - input_extension + '_fastqc.html')
 		]
 	} else {
 		products = [
