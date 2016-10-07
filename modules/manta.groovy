@@ -14,7 +14,7 @@ manta_configure = {
     	// Running a command
 	
 	produce("runWorkflow.py") {
-	    	exec "configManta.py --bam $input.bam --referenceFasta $REF --runDir $output.dir"
+	    	exec "configManta.py --bam $input --referenceFasta $REF --runDir $output.dir"
 	}
 
 	// Validation here?

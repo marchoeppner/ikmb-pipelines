@@ -6,7 +6,6 @@ inputs "fastq.gz" : "Expecting compressed fastq files (fastq.gz)"
 
 load 'dzhk_whole_genome.config'
 
-// NA12878wgs_20FUKAAXX_NA_L006_R1.fastq.gz
 // AH81VLADXX_U0b_TGACCA_L002_R1.fastq.gz
 
 run {  "%_*.fastq.gz" * [ 
@@ -15,9 +14,9 @@ run {  "%_*.fastq.gz" * [
 	] 
 	+ "*.cram" * [ samtools_merge + samtools_index ]
         + [ 
-		isaac_variant_configure + isaac_variant + extract_variants + vep.using(everything:true,format:"json"),
-		manta_configure + manta + vep.using(name:"SV",everything:true,format:"json"),
-		freebayes_parallel.using(procs:16)
+		cram2bam + samtools_index + starling_variant_caller + extract_variants + vcffilter + vep.using(format:"json"),
+		manta_variant_caller + vep.using(name:"SV",format:"json"),
+		freebayes_parallel.using(procs:16) + vcffilter + vep.using(format:"json")
 	]
 ] }
 

@@ -1,3 +1,42 @@
+cram2bam = {
+
+	doc about: "A stage to convert CRAM files into BAM files",
+        description: "Converts .cram to .bam",
+        constraints: "Must have samtools in PATH",
+        author: "mphoeppner@gmail.com"
+
+        // Variables here
+        var procs : 8           // Number of cores to use
+        var directory : ""      // Allows specifying an output directory
+        var mem : 16
+        // requires here
+
+        requires SAMTOOLS : "Must provide location of Samtools"
+
+        // Set a different output directory
+        if (directory.length() > 0) {
+                output.dir = directory
+        }
+
+        // Running a command
+
+        def fasta_index = REF + ".fai"
+
+        transform("bam") {
+                exec "$SAMTOOLS view -@ $procs -b -o $output $input","cram2bam"
+        }
+
+        // Validation here?
+
+        check {
+                exec "[ -s $output ]"
+        } otherwise {
+                fail "Output empty, terminating $branch.name"
+	}
+
+}
+
+
 @preserve
 samtools_bam_sort = {
 
@@ -145,7 +184,7 @@ samtools_merge = {
         }
 
         produce(bam_file) {
-                exec "$SAMTOOLS merge -@ $procs $options $bam_file $inputs"
+                exec "$SAMTOOLS merge -@ $procs $options $bam_file $inputs","samtools_merge"
         }
 
 }

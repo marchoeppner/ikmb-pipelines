@@ -15,6 +15,8 @@ isaac_variant_configure = {
 	// Set a different output directory
 
 	output.dir = "isaac_" + branch.sample
+
+	branch.isaac_input = input
 	
     	// Running a command
 	
@@ -47,7 +49,18 @@ isaac_variant = {
 	// the output name from the original bam file, so we do this:
 	def makefile = input
 
-	transform("genome.vcf.gz") {
-		exec "make -j $procs -f $makefile","isaac"
-	}
+	// Must figure out whether input is CRAM or BAM (for proper naming output)
+        def dot = file(branch.isaac_input).name.lastIndexOf(".")
+        def extension = file(branch.isaac_input).name.substring(dot + 1)
+
+        if (extension == "cram") {
+		from("cram") transform("genome.vcf.gz") {
+			exec "make -j $procs -f $makefile","isaac"
+		}
+        } else {
+		from("bam") transform("genome.vcf.gz") {
+                        exec "make -j $procs -f $makefile","isaac"
+		}
+        }
+
 }

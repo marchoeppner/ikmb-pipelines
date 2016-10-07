@@ -5,17 +5,7 @@ Installation instruction
 
 Bpipe (http://github.com/ssadedin/bpipe/)
 
-Ruby 2.0 or higher (for the pipeline configuration script)
-
 Plus any tool you wish to pipeline. 
-
-Supported modules include:
-Samtools: http://www.htslib.org/
-BWA: http://bio-bwa.sourceforge.net/
-GATK: https://software.broadinstitute.org/gatk/
-Picard: https://broadinstitute.github.io/picard/
-Blast+: ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST
-Bcl2Fastq: http://support.illumina.com/downloads/bcl2fastq-conversion-software-v217.html
 
 2) Installing this pipeline
 
@@ -27,37 +17,37 @@ Refresh your shell to make sure that the new environment variables are set prope
 
 3) Setting up individual pipelines
 
-First, you can get a list of available pipelines by doing (where PIPELINE_HOME is the directory to which you cloned this code):
+Pipelines are located under pipelines/ and have the extension ".bpipe". Along with each pipeline there will usually be several auxilliary files:
+- my_pipeline.config (sets the necessary variables, like location of executables and reference data sets)
+- my_pipeline.load_modules (optional, will load all the required software packages via the IKMB environment modules)
+- my_pipeline.readme (a short description of the pipeline)
 
-$PIPELINE_HOME/config/bpipe_config -l
+Resource requirements for the different pipeline stages are specified in the file bpipe.config (used by all pipelines).
 
-To prepare to run a pipeline, get the name from the previous step and
-$PIPELINE_HOME/config/bpipe_config -p name_of_pipeline -c
-$PIPELINE_HOME/config/bpipe_config -b
-
-This will create two files - pipeline.config.template and bpipe.config.template
-
-Rename these files to remove the .template suffix and fill out the relevant values. 
-
-For instructions on how to configure a bpipe.config file, please see http://docs.bpipe.org/Guides/ResourceManagers/
-
-NOTE: Not all pipelines actually need a pipeline.config file, so if the file is empty, you may as well delete it. 
+If you have to change variables in the config or change resource usage, you can simply copy the respective file to the location where you 
+will run the pipeline and modify this local copy (the local dir has the highest priority when looking for this information)
 
 4) Running a pipeline
 
-Assuming you filled out the config file(s), you can next test if the pipeline recognizes your input and see what commands it will run first:
+If the pipeline has a module loading script, you should run that first:
 
-bpipe test /path/to/pipeline_file input files
+source /path/to/pipelines/my_pipeline.load_modules
+
+The basic syntax for checking that the pipeline checks out is:
+
+bpipe test /path/to/pipelines/my_pipeline.bpipe input_files
 
 If this looks ok and no errors are thrown, you can run the pipeline:
 
-bpipe run -n allowed number of cores /path/to/pipeline_file input_files
+bpipe run -r -n allowed_number_of_cores /path/to/pipeline_file input_files
 
 The allowed_number_of_cores controls how many compute cores the pipeline is allowed to use at most across your cluster. 
+The "-r" flag will generate a report of that pipeline run in doc/index.html - useful for documenting analyses.
+Input_files can either be an actual list of files or include wild cards for pattern matching. 
 
 5) Additional reading:
 
-Each pipeline has a detailed description in a companion file ending on .info. 
+Each pipeline has a detailed description in a companion file ending on .readme. 
 
 A detailed documentation for Bpipe can be found: http://docs.bpipe.org/
 
