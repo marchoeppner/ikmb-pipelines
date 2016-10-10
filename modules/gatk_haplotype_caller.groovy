@@ -9,13 +9,13 @@ gatk_haplotype_caller = {
         var procs : 16          // Number of cores to use
         var directory : ""      // Allows specifying an output directory
         var memory : "22"
+	var exome : true 	// Run on the exome only, ecpects TARGET_FILE
 
         // Requires
         requires GATK : "Must provide path to GATK"
         requires REF  : "Must provide reference file for GATK"
         requires SNP_REF : "Must provide reference SNPS for GATK"
         requires DBSNP_REF : "Must provide dbSNP reference"
-	requires TARGET_FILE : "Must provide the Exome target file"
 
 	def vcf_file = ""
 	if (branch.sample) {
@@ -24,10 +24,18 @@ gatk_haplotype_caller = {
 		vcf_file = branch.name + ".gatk.raw.vcf"
 	}
 
+	def options = ""
+
+	if (exome) {
+		requires TARGET_FILE : "Must provide the Exome target file"
+		options += " -L $TARGET_file -L chrM"
+
+	}
+		
 	produce(vcf_file) {
 		exec """
 			java -XX:ParallelGCThreads=1 -jar -Xmx${memory}g $GATK
-                	-T HaplotypeCaller
+               		-T HaplotypeCaller
 			-nct $procs
 			-minPruning 4 -minReadsPerAlignStart 10
 			-R $REF
@@ -35,9 +43,7 @@ gatk_haplotype_caller = {
 			--dbsnp $DBSNP_REF
 			-stand_call_conf 50.0
 			-stand_emit_conf 10.0
-			-mbq 10
-			-L $TARGET_FILE
-			-L chrM
+			-mbq 10 $options
 			-o $output
 		""","gatk_haplotype_caller"
 	}

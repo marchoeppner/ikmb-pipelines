@@ -13,9 +13,6 @@ gatk_variant_recalibrator = {
 
     	// requires here
 	requires GATK : "Must provide path to GATK"
-	requires HAPMAP_REF : "Must provide path to HAPMAP reference file"
-	requires DBSNP_REF : "Must provide dbSNP reference file"
-	requires OMNI_REF : "Must provide g1k omni reference file"
 	requires REF : "Must provide genome reference"
 
 	// Set a different output directory
@@ -27,11 +24,19 @@ gatk_variant_recalibrator = {
 
 	// Impement two modes - SNP or INDEL
 	def extension = ""
-
+	def options = ""
 	if (mode == "SNP") {
 		extension = "snps"
+		requires HAPMAP_REF : "Must provide path to HAPMAP reference file"
+	        requires DBSNP_REF : "Must provide dbSNP reference file"
+        	requires OMNI_REF : "Must provide g1k omni reference file"
+		options += "-resource:hapmap,VCF,known=false,training=true,truth=true,prior=15.0 $HAPMAP_REF "
+ 	        options += "-resource:omni,VCF,known=false,training=true,truth=false,prior=12.0 $OMNI_REF "
+                options += "-resource:dbsnp,VCF,known=true,training=false,truth=false,prior=2.0 $DBSNP_REF "
 	} else if (mode == "INDEL") {
 		extension =" indels"
+		requires MILLS_REF : "Must provide path to MILLS reference file"
+		options += "-resource:mills,known=true,training=true,truth=true,prior=12.0 $MILLS_REF"
 	} else {
 		fail "Do not understand the mode $mode, aborting"
 	}
@@ -51,9 +56,7 @@ gatk_variant_recalibrator = {
 			-an MQ
 			-minNumBad 1000
 			-input $input
-			-resource:hapmap,VCF,known=false,training=true,truth=true,prior=15.0 $HAPMAP_REF
-			-resource:omni,VCF,known=false,training=true,truth=false,prior=12.0 $OMNI_REF
-			-resource:dbsnp,VCF,known=true,training=false,truth=false,prior=2.0 $DBSNP_REF
+			$options
 			-recalFile $output1
 			-tranchesFile $output2
 			-rscriptFile $output3

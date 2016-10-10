@@ -30,7 +30,7 @@ gatk_select_variants = {
         	                java -XX:ParallelGCThreads=1 -jar -Xmx${memory}g $GATK
                 	                -T SelectVariants
 					-selectType $select
-                        	        -V $input
+                        	        -V $input.vcf
 	                                -o $output
         	                        -R $REF
 	                ""","gatk_select_variants"

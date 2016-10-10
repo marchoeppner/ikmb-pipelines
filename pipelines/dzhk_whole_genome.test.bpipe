@@ -16,7 +16,12 @@ run {  "%_*.fastq.gz" * [
         + [ 
 		cram2bam + samtools_index + starling_variant_caller + extract_variants + vcffilter + vep.using(format:"json"),
 		manta_variant_caller + vep.using(name:"SV",format:"json"),
-		freebayes_parallel.using(procs:16) + vcffilter + vep.using(format:"json")
+		freebayes_parallel.using(procs:16) + vcffilter + vep.using(format:"json"),
+		gatk_wgs_pipeline + [
+			gatk_select_variants.using(select:"SNP") + gatk_variant_recalibrator.using(mode:"SNP") + gatk_apply_recalibration + vep.using(format:"json"),
+			gatk_select_variants.using(select:"INDEL") + gatk_variant_recalibrator.using(mode:"INDEL") + gatk_apply_recalibration + vep.using(format:"json")
+		]
+
 	]
 ] }
 
