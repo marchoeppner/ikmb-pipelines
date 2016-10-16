@@ -10,14 +10,12 @@ load 'dzhk_whole_genome.config'
 
 run {  "%_*.fastq.gz" * [ 
 	pipeline_prepare + "%_%_%_%_R*.fastq.gz" * [ 
-		trimmomatic + bwa_pipeline 
+		trimmomatic + bwa_pipeline + gatk_base_recalibrate + gatk_print_reads
 	] 
-	+ "*.cram" * [ samtools_merge + samtools_index ]
+	+ "*.bam" * [ samtools_merge + samtools_index ]
         + [ 
-		cram2bam + samtools_index + starling_variant_caller + extract_variants + vcffilter + vep.using(format:"json"),
-		manta_variant_caller + vep.using(name:"SV",format:"json"),
 		freebayes_parallel.using(procs:16) + vcffilter + vep.using(format:"json"),
-		gatk_wgs_pipeline + [
+		gatk_haplotype_caller + [
 			gatk_select_variants.using(select:"SNP") + gatk_variant_recalibrator.using(mode:"SNP") + gatk_apply_recalibration + vep.using(format:"json"),
 			gatk_select_variants.using(select:"INDEL") + gatk_variant_recalibrator.using(mode:"INDEL") + gatk_apply_recalibration + vep.using(format:"json")
 		]

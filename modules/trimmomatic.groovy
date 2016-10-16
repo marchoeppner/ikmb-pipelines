@@ -1,5 +1,5 @@
 // Trimmomatic module
-
+@preserve
 trimmomatic = {
 
     var paired : true

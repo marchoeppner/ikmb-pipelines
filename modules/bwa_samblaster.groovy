@@ -32,8 +32,14 @@ bwa_mem_samblaster = {
 		sam_options += "-b"
 	}
 
+	def rg_id = ""
+	if (branch.sample) 	{
+		rg_id = branch.sample
+	} else {
+		rg_id = branch.name
+	}
 
-	def header = '@RG' + "\\tID:Illumina\\tSM:${branch.sample}_${BWA_INDEX}\\tLB:lib_2x${read_length}\\tDS:${BWA_INDEX}\\tCN:ICMB,Kiel;Germany"
+	def header = '@RG' + "\\tID:${rg_id}\\tPL:Illumina\\tSM:${rg_id}_${BWA_INDEX}\\tLB:lib_2x${read_length}\\tDS:${BWA_INDEX}\\tCN:ICMB,Kiel;Germany"
 
 	def command = ""
 

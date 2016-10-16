@@ -6,10 +6,11 @@ gatk_variant_recalibrator = {
     	author: "mphoeppner@gmail.com"
 
 	// Variables here
-	var procs : 8		// Number of cores to use
+	var procs : 16		// Number of cores to use
 	var directory : ""	// Allows specifying an output directory
-	var memory : "22"	// Set max memory for GATK
+	var memory : "64"	// Set max memory for GATK
 	var mode : "SNP"	// Mode for GATK module
+	var exome : false	// Exome mode?
 
     	// requires here
 	requires GATK : "Must provide path to GATK"
@@ -41,20 +42,19 @@ gatk_variant_recalibrator = {
 		fail "Do not understand the mode $mode, aborting"
 	}
 
-    	transform(".vcf") to(".recal.file",".tranches",".plot") {
+	if (exome) {
+		options += " -an DP -an QD -an FS -an MQRankSum -an ReadPosRankSum -an MQ -minNumBad 1000"
+	} else {
+		options += " -an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS -an SOR -minNumBad 1000"
+	}
+
+    	transform(".vcf") to(".recal",".tranches",".plot") {
 		exec """
                         java -XX:ParallelGCThreads=1 -jar -Xmx${memory}g $GATK
                         -T VariantRecalibrator
 			-nt $procs
 			-mode $mode
 			--maxGaussians 4
-			-an DP
-			-an QD
-			-an FS
-			-an MQRankSum
-			-an ReadPosRankSum
-			-an MQ
-			-minNumBad 1000
 			-input $input
 			$options
 			-recalFile $output1

@@ -1,3 +1,4 @@
+@preserve
 gatk_apply_recalibration = {
 
 	doc about: "Applies recalibration to variants using GATK",
@@ -21,8 +22,7 @@ gatk_apply_recalibration = {
 	}
 	
     	// Running a command
-	
-	
+		
 	from("vcf","tranches","recal") {
 		exec """
                         java -XX:ParallelGCThreads=1 -jar -Xmx${memory}g $GATK
@@ -32,8 +32,8 @@ gatk_apply_recalibration = {
 			-input $input.vcf
 			-tranchesFile $input.tranches
 			-recalFile $input.recal
-			-o $output
-			-r $REF
+			-o $output.vcf
+			-R $REF
 			
 		"""
 	}

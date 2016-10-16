@@ -1,0 +1,10 @@
+// A short description of the pipeline here
+
+about title: "A descriptive title for the pipeline, needed for bpipe_config tool"
+
+// inputs "file pattern here" : "Explanation of required input"
+
+load 'genome_align_reads_bwa_mem.config'
+
+run { "%_R*.fastq.gz" * [  trimmomatic + [ fastqc, bwa_mem_samblaster ] ] } 
+

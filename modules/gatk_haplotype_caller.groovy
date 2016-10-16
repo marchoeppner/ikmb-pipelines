@@ -9,7 +9,7 @@ gatk_haplotype_caller = {
         var procs : 16          // Number of cores to use
         var directory : ""      // Allows specifying an output directory
         var memory : "22"
-	var exome : true 	// Run on the exome only, ecpects TARGET_FILE
+	var exome : false 	// Run on the exome only, ecpects TARGET_FILE
 
         // Requires
         requires GATK : "Must provide path to GATK"
@@ -39,7 +39,7 @@ gatk_haplotype_caller = {
 			-nct $procs
 			-minPruning 4 -minReadsPerAlignStart 10
 			-R $REF
-			-I $input.bam
+			-I $input
 			--dbsnp $DBSNP_REF
 			-stand_call_conf 50.0
 			-stand_emit_conf 10.0
