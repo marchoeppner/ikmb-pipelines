@@ -17,22 +17,18 @@ gatk_haplotype_caller = {
         requires SNP_REF : "Must provide reference SNPS for GATK"
         requires DBSNP_REF : "Must provide dbSNP reference"
 
-	def vcf_file = ""
-	if (branch.sample) {
-		vcf_file = branch.sample + ".gatk.raw.vcf"
-	} else {
-		vcf_file = branch.name + ".gatk.raw.vcf"
-	}
-
 	def options = ""
-
 	if (exome) {
 		requires TARGET_FILE : "Must provide the Exome target file"
 		options += " -L $TARGET_file -L chrM"
 
 	}
-		
-	produce(vcf_file) {
+
+	if (chr){
+		options += " -L $chr"
+	}
+ 		
+	transform("gatk.raw.vcf") {
 		exec """
 			java -XX:ParallelGCThreads=1 -jar -Xmx${memory}g $GATK
                		-T HaplotypeCaller

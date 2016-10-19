@@ -20,8 +20,14 @@ freebayes = {
 	}
 	
     	// Running a command
+	def options = ""
+
+        if (chr) {
+		options += " -r $chr"
+        } 
+
 	transform("freebayes.vcf") {
-	    	exec "$FREEBAYES -f $REF $input > $output","freebayes"
+	    	exec "$FREEBAYES $options -f $REF $input > $output","freebayes"
 	}
 
 	// Validation here?
