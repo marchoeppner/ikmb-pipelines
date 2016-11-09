@@ -22,12 +22,11 @@ Bpipe.run { "%_%_*.fastq.gz" * [
 				+ samtools_bam_sort 
 				+ samtools_index 
 			]
-
-			+ "*.bam" * [ 
+			+ "*.cram" * [ 
 				samtools_merge 
 				+ samtools_index 
 			] 
-
+			cram2bam
 			+ gatk_local_realign_target 
 			+ gatk_local_realign + [ 
 				samtools_flagstat , 
