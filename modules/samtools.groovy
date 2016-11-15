@@ -141,15 +141,17 @@ samtools_index = {
 	def index_file
 	def dot = file(input).name.lastIndexOf(".")
 	def extension = file(input).name.substring(dot + 1)
+	def options_flag = "-b"
 	
 	if (extension == "cram") {
 		index_file = input + ".crai"
+		options_flag = "-c"
 	} else {
 		index_file = input + ".bai"
 	}
 	
         produce(index_file) {
-                exec "$SAMTOOLS index $input"
+                exec "$SAMTOOLS index $options_flag $input"
         }
 
         forward input

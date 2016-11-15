@@ -33,15 +33,15 @@ Bpipe.run { "%_%_*.fastq.gz" * [
 				samtools_flagstat , 
 				gatk_base_recalibrate 
 				+ gatk_print_reads 
-				+ samtools_view.using(quality:"1") 
+				+ samtools_view.using(quality:"1",cram:false) 
 				+ samtools_index
-				+ samtools_flagstat 
+				+ samtools_flagstat
 				+ picard_coverage
-				+ gatk_haplotype_caller
+				+ gatk_haplotype_caller.using(exome:true,chr:false)
 				+ [ 
-					gatk_select_variants.using(select:"SNP") + gatk_variant_recalibrator.using(mode:"SNP") + gatk_apply_recalibration + vep.using(format:"json"),  
-					gatk_select_variants.using(select:"INDEL") + gatk_variant_recalibrator.using(mode:"INDEL") + gatk_apply_recalibration + vep.using(format:"json")
-				]
+					gatk_select_variants.using(select:"SNP") + gatk_variant_recalibrator.using(mode:"SNP") + gatk_apply_recalibration ,  
+					gatk_select_variants.using(select:"INDEL") + gatk_variant_recalibrator.using(mode:"INDEL") + gatk_apply_recalibration
+				] + "*.vcf" * [ gatk_merge_vcf_files ] + vep.using(format:"json")
 			] 
 		]
 	] 

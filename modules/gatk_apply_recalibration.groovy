@@ -40,10 +40,10 @@ gatk_apply_recalibration = {
 
 	// Validation here?
 
-        check {
-                exec "[ -s $output ]"
-        } otherwise {
-                fail "Output empty, terminating $branch.name"
-        }
+//        check {
+//                exec "[ -s $output.vcf ]"
+//        } otherwise {
+//                fail "Output empty, terminating $branch.name (expecting: $output.vcf)"
+//        }
 	
 }

@@ -20,7 +20,7 @@ gatk_haplotype_caller = {
 	def options = ""
 	if (exome) {
 		requires TARGET_FILE : "Must provide the Exome target file"
-		options += " -L $TARGET_file -L chrM"
+		options += " -L $TARGET_FILE -L chrM"
 
 	}
 
