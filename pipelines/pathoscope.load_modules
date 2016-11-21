@@ -1,0 +1,5 @@
+#!/bin/bash
+
+module load Bowtie2/2.2.3
+module load Samtools/0.1.19
+module load Pathoscope2/2.0.6
