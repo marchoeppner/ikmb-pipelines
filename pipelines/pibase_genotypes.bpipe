@@ -1,0 +1,11 @@
+// A short description of the pipeline here
+
+about title: "A pipeline to run the pibase workflow for genotyping"
+
+inputs "bam" : "Expecting BAM file as input"
+
+load 'pibase_genotypes.config'
+
+run { pipeline_prepare + samtools_calmd + samtools_index + pibase_bamref + pibase_consensus   }
+
+

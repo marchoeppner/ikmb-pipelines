@@ -250,3 +250,27 @@ samtools_flagstat = {
 
 	forward input
 }
+
+samtools_calmd = {
+
+
+        doc about: "A stage to generate a BAM file with MD calls",
+        description: "Generates MD calls on BAM file using samtools calmd",
+        constraints: "Must have samtools in PATH",
+        author: "mphoeppner@gmail.com"
+
+        // Variables here
+        var procs : 1           // Number of cores to use
+        var directory : ""      // Allows specifying an output directory
+
+        requires SAMTOOLS : "Must provide location of Samtools"
+	requires REF : "Must provide location of matching FASTA sequence"
+
+        filter("md") {
+
+                exec "$SAMTOOLS calmd -b $input $REF > $output.bam"
+
+        }
+
+        forward input
+}
