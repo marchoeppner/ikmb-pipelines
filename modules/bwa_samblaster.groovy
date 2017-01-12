@@ -12,7 +12,7 @@ bwa_mem_samblaster = {
 	var paired : true
 	var phred_64 : false
 	var read_length : 100
-	var cram : true
+	var cram : false
 
     	// requires here
 	requires BWA_INDEX : "Must provide location of BWA_INDEX"

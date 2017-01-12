@@ -33,5 +33,11 @@ gatk_base_recalibrate = {
                 ""","gatk_base_recalibrate"
         }
 
+  //	check {
+  //              exec "[ -s $output ]"
+  //      } otherwise {
+  //              fail "Output empty, terminating $branch.name"
+  //      }
+
         forward input
 }

@@ -28,10 +28,11 @@ Bpipe.run { "%_%_*.fastq.gz" * [
 				+ samtools_index 
 			] 
 			+ cram2bam + samtools_index
+			+ picard_dedup + samtools_index
 			+ gatk_local_realign_target 
 			+ gatk_local_realign + [ 
 				samtools_flagstat , 
-				gatk_base_recalibrate 
+				gatk_base_recalibrate.using(memory:24)
 				+ gatk_print_reads 
 				+ samtools_view.using(quality:"1",cram:false) 
 				+ samtools_index

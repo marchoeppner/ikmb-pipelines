@@ -24,3 +24,20 @@ vcf_passed_variants_from_gz = {
 
 	// Validation here?
 }
+
+vcf_concat = {
+
+	doc about: "vcf-concat from the VCFtools package",
+        description: "Concatenate VCF files split by chromosome",
+        constraints: "None",
+        author: "mphoeppner@gmail.com"
+
+	var procs : 1
+
+	requires "VCFCONCAT" : "Must specifiy location of vcf-concat tool from VCFtools"
+
+	from("*vcf") transform("merged.vcf") {
+		exec "$VCFCONCAT $inputs > $output"
+	}
+
+}

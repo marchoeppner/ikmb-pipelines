@@ -31,7 +31,7 @@ bwa_mem = {
 
 
 	produce(samfile) {
-		exec "BWA mem -t $procs -M  -R \"$header\" $BWA_INDEX $command > $output", "bwa_mem"
+		exec "$BWA mem -t $procs -M  -R \"$header\" $BWA_INDEX $command > $output", "bwa_mem"
 	}
 
 	// validation of output

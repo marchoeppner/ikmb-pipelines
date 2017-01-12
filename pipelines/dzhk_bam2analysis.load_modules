@@ -1,0 +1,8 @@
+module load IKMB
+module load Python/2.7.10
+module load Java/1.8.0
+module load Bpipe/0.9.9b2
+module load Boogie/current
+module load Ruby/2.2.2
+
+

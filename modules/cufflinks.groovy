@@ -47,7 +47,7 @@ cufflinks = {
 
         branch.assembly_method = "j" + cufflinks_j + "_F" + cufflinks_F
 	
-        output.dir = directory + "/" + branch.name + "_" + assembly_method
+        output.dir = directory + "/" + branch.sample + "_" + assembly_method
 
         // The file to pass on is generally 'transcripts.gtf' - we use it as output.
 

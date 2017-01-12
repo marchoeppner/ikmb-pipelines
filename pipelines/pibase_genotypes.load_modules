@@ -1,0 +1,9 @@
+#!/bin/bash
+# Load the modules required by the Pibase pipeline
+
+module load IKMB
+module load Python/2.7.10
+module load Pibase
+module load Samtools/1.3
+
+

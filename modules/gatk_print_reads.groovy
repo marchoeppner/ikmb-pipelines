@@ -6,7 +6,7 @@ gatk_print_reads = {
         author: "mphoeppner@gmail.com"
 
         // Variables here
-        var procs : 16          // Number of cores to use
+        var procs : 4          // Number of cores to use
         var directory : ""      // Allows specifying an output directory
         var memory : "22"
 

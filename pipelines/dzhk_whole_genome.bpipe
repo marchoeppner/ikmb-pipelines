@@ -8,20 +8,13 @@ load 'dzhk_whole_genome.config'
 
 // AH81VLADXX_U0b_TGACCA_L002_R1.fastq.gz
 
-run {  "%_*.fastq.gz" * [ 
-	pipeline_prepare + "%_%_%_%_R*.fastq.gz" * [ 
-		trimmomatic + bwa_pipeline + gatk_base_recalibrate + gatk_print_reads
-	] 
-	+ "*.bam" * [ samtools_merge + samtools_index ]
-        + [ 
-		chr(1..22,,'MT','X','Y') * [ 
-                        freebayes + vcffilter + vep.using(format:"json"),
-			gatk_haplotype_caller.using(procs:4) + [
-				gatk_select_variants.using(select:"SNP") + gatk_variant_recalibrator.using(mode:"SNP") + gatk_apply_recalibration + vep.using(format:"json"),
-				gatk_select_variants.using(select:"INDEL") + gatk_variant_recalibrator.using(mode:"INDEL") + gatk_apply_recalibration + vep.using(format:"json")
-			]
-		]
-	]
-] }
+Bpipe.run {  "%_*.fastq.gz" * [ pipeline_prepare 
+	+ trimmomatic 
+	+ bwa_pipeline 
+	+ samtools_index
+	+ gatk_base_recalibrate 
+	+ gatk_print_reads 
+	+ chr(1..22,,'MT','X','Y') * [ freebayes + vcffilter + vep.using(format:"json"), gatk_haplotype_caller.using(procs:4) ] 
+]}
 
 

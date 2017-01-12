@@ -9,7 +9,7 @@ gatk_haplotype_caller = {
         var procs : 16          // Number of cores to use
         var directory : ""      // Allows specifying an output directory
         var memory : "22"
-	var exome : false 	// Run on the exome only, ecpects TARGET_FILE
+	var exome : false 	// Run on the exome only, expects TARGET_FILE
 
         // Requires
         requires GATK : "Must provide path to GATK"

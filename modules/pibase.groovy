@@ -20,8 +20,12 @@ pibase_bamref = {
 	}
 	
     	// Running a command
-	
-    	exec "pibase_bamref $PIBASE_VCF $REF $input $output $PIBASE_LR"
+
+	def appendix = "pibase_bamref_" + PIBASE_VCF
+
+	filter(appendix) {
+	    	exec "pibase_bamref $PIBASE_VCF $REF $input $output $PIBASE_LR"
+	}
 
 	// Validation here?
 
@@ -65,3 +69,4 @@ pibase_consensus = {
 
 
 }
+

@@ -1,3 +1,41 @@
+bam2cram = {
+
+        doc about: "A stage to convert BAM files into CRAM files",
+        description: "Converts .cram to .bam",
+        constraints: "Must have samtools in PATH",
+        author: "mphoeppner@gmail.com"
+
+        // Variables here
+        var procs : 8           // Number of cores to use
+        var directory : ""      // Allows specifying an output directory
+        var mem : 16
+        // requires here
+
+        requires SAMTOOLS : "Must provide location of Samtools"
+
+        // Set a different output directory
+        if (directory.length() > 0) {
+                output.dir = directory
+        }
+
+        // Running a command
+
+        def fasta_index = REF + ".fai"
+
+        transform("cram") {
+                exec "$SAMTOOLS view -@ $procs -C -o $output $input","bam2cram"
+        }
+
+        // Validation here?
+
+        check {
+                exec "[ -s $output ]"
+        } otherwise {
+                fail "Output empty, terminating $branch.name"
+        }
+
+}
+
 cram2bam = {
 
 	doc about: "A stage to convert CRAM files into BAM files",
@@ -63,7 +101,7 @@ samtools_bam_sort = {
         def fasta_index = REF + ".fai"
 
 	transform(".sam") to(".sorted.bam") {
-	    	exec "$SAMTOOLS view -uhSt $fasta_index $input | samtools sort -f -m ${mem}G - $output","samtools_bam_sort"
+	    	exec "$SAMTOOLS view -uhSt $fasta_index $input | samtools sort -m ${mem}G - -o $output","samtools_bam_sort"
 	}
 
 	// Validation here?
@@ -86,8 +124,8 @@ samtools_sort = {
         // Variables here
         var procs : 8           // Number of cores to use
         var directory : ""      // Allows specifying an output directory
-	var mem : "31"
-	var carm : true		// Specify if to use CRAM or BAM; default CRAM
+	var mem : "12"		// this is PER thread
+	var cram : false		// Specify if to use CRAM or BAM; default CRAM
 
         // requires here
 	requires SAMTOOLS : "Must provide location of samtools"
@@ -103,9 +141,7 @@ samtools_sort = {
 	def options = ""
 
 	if (cram) {
-		options += "-O cram --reference $REF"
-	} else {
-		options += "-O bam"
+		options += "-O CRAM --reference $REF"
 	}	
 	
 
@@ -169,23 +205,22 @@ samtools_merge = {
         // Variables here
         var procs : 8           // Number of cores to use
         var directory : ""      // Allows specifying an output directory
-	var cram : true		// Use CRAM format
+	var cram : false		// Use CRAM format
 
         requires SAMTOOLS : "Must provide location of Samtools"
 	requires REF : "Must provide location of alignment reference"
 
 	def options = ""
 	def bam_file 
-
         if (cram) {
                 options += "-O cram --reference $REF"
 		bam_file = branch.sample + ".cram"
         } else {
-                options += "-O bam"
+                options += ""
 		bam_file = branch.sample + ".bam"
         }
 
-        produce(bam_file) {
+        from("bam") produce(bam_file) {
                 exec "$SAMTOOLS merge -@ $procs $options $bam_file $inputs","samtools_merge"
         }
 
@@ -203,7 +238,7 @@ samtools_view = {
         var procs : 1           // Number of cores to use
         var directory : ""      // Allows specifying an output directory
 	var quality : ""
-	var cram : true 	// Use CRAM format as output
+	var cram : false 	// Use CRAM format as output
 
         requires SAMTOOLS : "Must provide location of Samtools"
 
