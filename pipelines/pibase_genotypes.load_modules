@@ -2,6 +2,7 @@
 # Load the modules required by the Pibase pipeline
 
 module load IKMB
+module load Bpipe/0.9.9b3
 module load Python/2.7.10
 module load Pibase
 module load Samtools/1.3

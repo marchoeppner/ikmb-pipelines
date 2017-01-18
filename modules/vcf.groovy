@@ -36,7 +36,9 @@ vcf_concat = {
 
 	requires "VCFCONCAT" : "Must specifiy location of vcf-concat tool from VCFtools"
 
-	from("*vcf") transform("merged.vcf") {
+	def merged_vcf = branch.sample + ".merged.vcf" 
+
+	from("*vcf") produce(merged_vcf) {
 		exec "$VCFCONCAT $inputs > $output"
 	}
 

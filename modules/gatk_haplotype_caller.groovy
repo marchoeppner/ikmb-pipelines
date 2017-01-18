@@ -20,14 +20,10 @@ gatk_haplotype_caller = {
 	def options = ""
 	if (exome) {
 		requires TARGET_FILE : "Must provide the Exome target file"
-		options += " -L $TARGET_FILE -L chrM"
+		options += " -L $TARGET_FILE"
 
 	}
 
-	if (chr){
-		options += " -L $chr"
-	}
- 		
 	transform("gatk.raw.vcf") {
 		exec """
 			java -XX:ParallelGCThreads=1 -jar -Xmx${memory}g $GATK

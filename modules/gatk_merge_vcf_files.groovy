@@ -1,4 +1,4 @@
-gatk_merge_vcf_files = {
+gatk_merge_vcf = {
 
 	doc about: "A generic module that needs a description",
 	description: "Description here",
@@ -17,7 +17,7 @@ gatk_merge_vcf_files = {
 	
 	def vcf_merged = branch.sample + ".merged.vcf"
 
-	produce(vcf_merged) {
+	from("vcf") produce(vcf_merged) {
 	    	exec """
 			java -XX:ParallelGCThreads=1 -jar -Xmx${memory}g $GATK 
 			-T CombineVariants

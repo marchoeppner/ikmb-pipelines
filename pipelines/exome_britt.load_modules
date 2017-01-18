@@ -2,6 +2,7 @@
 # Load the modules required by the Exome pipeline
 
 module load IKMB
+module load Bpipe/0.9.9b3
 module load Perl/5.18.4
 module load Java/1.8.0
 module load Fastqc

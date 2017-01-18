@@ -1,0 +1,41 @@
+// Reference assembly
+
+ASSEMBLY="GRCh38"
+
+GATK_BUNDLE="/ifs/data/nfs_share/ikmb_repository/references/gatk/bundle/hg38/hg38bundle"
+
+// A VCF formatted file of loci to genotype
+// PIBASE_VCF=""
+
+// Reference genome used for creating the BAM file
+REF="$GATK_BUNDLE/Homo_sapiens_assembly38.fasta"
+
+// Location of EnsEMBL cache root directory
+ENSEMBLCACHE="/ifs/data/nfs_share/ikmb_repository/databases/EnsEMBL/vep/cache"
+
+// Path to EnsEMBL VEP script
+VEP="variant_effect_predictor.pl"
+// Path to Samtools
+SAMTOOLS="samtools"
+// Location of GATK executable
+GATK="/ifs/data/nfs_share/ikmb_repository/software/gatk/3.6.0/GenomeAnalysisTK.jar"
+//No description available yet
+PICARD="/ifs/data/nfs_share/ikmb_repository/software/picard/1.134/picard.jar"
+// Location of Freebaye
+FREEBAYES="freebayes"
+// Location of variant effect predictor
+VEP="variant_effect_predictor.pl"
+// Location of vcf concat
+VCFCONCAT="vcf-concat"
+
+//Reference SNPs for GATK
+SNP_REF="$GATK_BUNDLE/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
+//No description available yet
+DBSNP_REF="$GATK_BUNDLE/dbsnp_144.hg38.vcf.gz"
+// 
+HAPMAP_REF="$GATK_BUNDLE/hapmap_3.3.hg38.vcf.gz"
+OMNI_REF="$GATK_BUNDLE/1000G_omni2.5.hg38.vcf.gz"
+MILLS_REF="$GATK_BUNDLE/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz"
+
+ENSEMBLCACHE="/ifs/data/nfs_share/ikmb_repository/databases/EnsEMBL/vep/cache"
+

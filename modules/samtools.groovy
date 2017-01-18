@@ -255,7 +255,7 @@ samtools_view = {
 		options += " -q ${quality}"
 	}
 
-        filter("view") {
+        transform("bam") {
 
                 exec "$SAMTOOLS view $options -o $output $input"
 
