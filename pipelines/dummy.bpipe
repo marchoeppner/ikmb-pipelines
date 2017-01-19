@@ -1,0 +1,11 @@
+// A short description of the pipeline here
+
+about title: "A dummy pipeline"
+
+inputs "fastq" : "Fastq files expected"
+
+// load 'pipeline.config'
+
+run { "%_R*.fastq" * [ pipeline_prepare + dummy ] }
+
+

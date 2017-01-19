@@ -35,19 +35,19 @@ tophat = {
 
     // Check if an annotation file OR transcriptome index is passed and
     // modify options
-    //if (GENOME_GTF.length() > 0) {
-    //    options += " -G $GENOME_GTF"
-    //    use_transcriptome = true
-    //} else if (TRANSCRIPTOME_INDEX.length() > 0) {
-    //    options += " --transcriptome-index $TRANSCRIPTOME_INDEX"
-    //    use_transcriptome = true
-    //}
+    if (GENOME_GTF.length() > 0) {
+        options += " -G $GENOME_GTF"
+        use_transcriptome = true
+    } else if (TRANSCRIPTOME_INDEX.length() > 0) {
+        options += " --transcriptome-index $TRANSCRIPTOME_INDEX"
+        use_transcriptome = true
+    }
 
     // We enable quantifcation only against known transcripts but only
     // if transcripts were provided
-   // if (tophat_T && use_transcriptome) {
-    //    options += " -T"
-    //}
+    if (tophat_T && use_transcriptome) {
+       options += " -T"
+    }
 
     requires BWT2_INDEX : "Must specify a Bowtie2 index (BWT2_INDEX)"
 

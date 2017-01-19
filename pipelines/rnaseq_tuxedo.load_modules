@@ -1,0 +1,5 @@
+module load IKMB
+module load Bpipe/0.9.9b3
+module load Bowtie2/2.2.3
+module load Tophat2/2.0.14
+module load Cufflinks/2.2.1

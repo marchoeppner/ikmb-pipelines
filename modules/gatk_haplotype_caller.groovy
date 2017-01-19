@@ -21,8 +21,10 @@ gatk_haplotype_caller = {
 	if (exome) {
 		requires TARGET_FILE : "Must provide the Exome target file"
 		options += " -L $TARGET_FILE"
-
+	} else {
+		options += " -L $chr"
 	}
+	
 
 	transform("gatk.raw.vcf") {
 		exec """
@@ -32,6 +34,7 @@ gatk_haplotype_caller = {
 			-minPruning 4 -minReadsPerAlignStart 10
 			-R $REF
 			-I $input
+			$options
 			--dbsnp $DBSNP_REF
 			-stand_call_conf 50.0
 			-stand_emit_conf 10.0
