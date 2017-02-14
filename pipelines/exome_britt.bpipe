@@ -38,9 +38,9 @@ Bpipe.run { "%_%_*.fastq.gz" * [
 				+ picard_coverage
 				+ gatk_haplotype_caller.using(exome:true)  
 				+ [
-					gatk_select_variants.using(select:"SNP") + gatk_variant_recalibrator.using(mode:"SNP",exome:true) + gatk_apply_recalibration + vep.using(format:"json"),  
-					gatk_select_variants.using(select:"INDEL") + gatk_variant_recalibrator.using(mode:"INDEL",exome:true) + gatk_apply_recalibration + vep.using(format:"json") 
-				]
+					gatk_select_variants.using(select:"SNP") + gatk_variant_recalibrator.using(mode:"SNP",exome:true) + gatk_apply_recalibration,
+					gatk_select_variants.using(select:"INDEL") + gatk_variant_recalibrator.using(mode:"INDEL",exome:true) + gatk_apply_recalibration
+				] + gatk_merge_vcf + vep.using(format:"json")
 			] 
 		]
 	] 

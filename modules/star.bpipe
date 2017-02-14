@@ -1,0 +1,68 @@
+star_align = {
+
+	doc about: "STAR RNA-seq aligner",
+	description: "Aligns reads against a STAR-indexed genome",
+    	constraints: "Requires STAR index",
+    	author: "mphoeppner@gmail.com"
+
+	// Variables here
+	var procs : 16		// Number of cores to use
+	var memory : 32212254720  // memory used for sorting
+	var star_multimap : 20	// max multimap location
+
+    	// requires here
+	requires STAR : "Must provide location of STAR"
+	requires STAR_INDEX : "Must provide location of STAR genome dir."
+
+    	// Running a command
+
+	def outfile = branch.sample + ".bam"
+
+	produce(outfile) {	
+	    	exec """
+			$STAR --genomeDir $STAR_INDEX  --readFilesIn $input   --outSAMunmapped Within 
+                	--readFilesCommand zcat  --outSAMtype BAM SortedByCoordinate  --quantMode GeneCounts
+			--outFileNamePrefix $branch.sample
+			--limitBAMsortRAM $memory
+			--runThreadN $procs --genomeLoad LoadAndKeep
+        	        --outFilterMultimapNmax $star_multimap --clip3pAdapterSeq TGGAATTCTC --clip3pAdapterMMp 0.1 --outFilterMismatchNoverLmax 0.03
+                	--outFilterScoreMinOverLread 0 --outFilterMatchNminOverLread 0 --outFilterMatchNmin 16 --alignSJDBoverhangMin 1000 --alignIntronMax 1 
+		"""
+	}
+
+	// Validation here?
+
+        check {
+                exec "[ -s $output ]"
+        } otherwise {
+                fail "Output empty, terminating $branch.name"
+        }
+	
+}
+
+star_bedgraph = {
+
+        doc about: "STAR BEDGraph Track",
+        description: "Generates BEDGraph tracks from BAM files",
+        constraints: "Requires STAR index dir",
+        author: "mphoeppner@gmail.com"
+
+        // Variables here
+        var procs : 1          // Number of cores to use
+
+        // requires here
+        requires STAR : "Must provide location of STAR"
+
+	transform("bam") to ("bedgraph") {
+		exec "$STAR --inputBAMfile $input.bam --runMode inputAlignmentsFromBAM  --outWigType bedGraph --outWigReferencesPrefix chr"
+	}
+
+	// Validation here?
+
+        check {
+                exec "[ -s $output ]"
+        } otherwise {
+                fail "Output empty, terminating $branch.name"
+        }
+}
+	

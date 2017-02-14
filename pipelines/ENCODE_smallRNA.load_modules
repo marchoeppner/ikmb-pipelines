@@ -1,0 +1,5 @@
+#!/bin/bash
+# Load the modules required by the ENCODE pipeline
+
+module load IKMB
+module load STAR

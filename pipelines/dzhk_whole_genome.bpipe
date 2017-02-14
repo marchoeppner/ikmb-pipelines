@@ -14,7 +14,6 @@ Bpipe.run {  "%_*.fastq.gz" * [ pipeline_prepare
 	+ samtools_index
 	+ gatk_base_recalibrate 
 	+ gatk_print_reads 
-	+ chr(1..22,,'MT','X','Y') * [ freebayes + vcffilter + vep.using(format:"json"), gatk_haplotype_caller.using(procs:4) ] 
 ]}
 
 

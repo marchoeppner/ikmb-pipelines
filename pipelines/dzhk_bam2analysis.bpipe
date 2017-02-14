@@ -10,9 +10,9 @@ run { "%.bam" * [ pipeline_prepare +  [ pibase_pipeline ,
 	chr(1..22,,'MT','X','Y') * [
                 freebayes + vcffilter + vep.using(format:"json"),
                 gatk_haplotype_caller.using(procs:4) + [
-                        gatk_select_variants.using(select:"SNP") + gatk_variant_recalibrator.using(mode:"SNP") + gatk_apply_recalibration + vep.using(format:"json"),
-                        gatk_select_variants.using(select:"INDEL") + gatk_variant_recalibrator.using(mode:"INDEL") + gatk_apply_recalibration + vep.using(format:"json")
-                ] + gatk_merge_vcf
+                        gatk_select_variants.using(select:"SNP") + vcffilter ,
+                        gatk_select_variants.using(select:"INDEL") + vcffilter 
+                ] + gatk_merge_vcf + vep.using(format:"json")
         ] 
 
  ] ]}

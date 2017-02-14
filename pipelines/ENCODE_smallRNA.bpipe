@@ -1,0 +1,11 @@
+// Implementation of the ENCODE smallRNA pipeline
+
+about title: "A descriptive title for the pipeline, needed for bpipe_config tool"
+
+inputs "fastq.gz" : "Expecting a gzipped fastq file as input (fastq.gz)"
+
+load 'ENCODE_smallRNA.config'
+
+run { "%.fastq.gz" * [ pipeline_prepare + star_align + star_bedgraph ] }
+
+

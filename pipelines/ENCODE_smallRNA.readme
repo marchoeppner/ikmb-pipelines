@@ -1,0 +1,6 @@
+This pipeline implements the ENCODE smallRNA pipeline:
+
+https://github.com/ENCODE-DCC/long-rna-seq-pipeline/blob/master/DAC/SmallRNA_CSHL.sh
+
+
+Some stuff is missing as I didn't find it useful. 
